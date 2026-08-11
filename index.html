@@ -1,116 +1,1055 @@
-<!-- From Uiverse.io by cf2-exe --> 
-<div
-  class="flex justify-center items-center relative transition-all duration-[450ms] ease-in-out w-auto"
->
-  <article
-    class="border border-solid border-gray-700 w-full ease-in-out duration-500 left-0 rounded-2xl flex shadow-lg shadow-black/15 bg-white"
-  >
-    <label
-      class="has-[:checked]:shadow-lg relative w-full h-16 p-4 ease-in-out duration-300 border-solid border-black/10 has-[:checked]:border group flex flex-row gap-3 items-center justify-center text-black rounded-xl"
-      for="dashboard"
-    >
-      <input
-        id="dashboard"
-        name="path"
-        type="radio"
-        class="hidden peer/expand"
-      />
-      <svg
-        viewBox="0 0 24 24"
-        height="24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-        class="peer-hover/expand:scale-125 peer-hover/expand:text-blue-400 peer-hover/expand:fill-blue-400 peer-checked/expand:text-blue-400 peer-checked/expand:fill-blue-400 text-2xl peer-checked/expand:scale-125 ease-in-out duration-300"
-      >
-        <path
-          d="M4 13h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1zm-1 7a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v4zm10 0a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v7zm1-10h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1z"
-        ></path>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OverLab — Formation Cybersécurité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg: #0B0E14;
+  --bg-alt: #0F1420;
+  --panel: #131826;
+  --panel-2: #171d2d;
+  --border: #232b3d;
+  --text: #E8EAED;
+  --text-dim: #8B93A7;
+  --accent: #3DDC97;
+  --accent-dim: #1B9E6E;
+  --danger: #FF6B5B;
+  --warn: #FF9F1C;
+  --safe: #3DDC97;
+  --neutral: #6C8CFF;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+/* Light mode overrides */
+body.light-mode{
+  --bg: #F5F7FA;
+  --bg-alt: #EEF1F6;
+  --panel: #FFFFFF;
+  --panel-2: #F1F3F8;
+  --border: #DFE4ED;
+  --text: #14181F;
+  --text-dim: #5B6472;
+}
+body.light-mode .hero-grid-bg{
+  background-image:
+    linear-gradient(rgba(27,158,110,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27,158,110,0.08) 1px, transparent 1px);
+}
+body.light-mode .btn-primary{ color:#052015; }
+body.light-mode .topbar{ background: rgba(245,247,250,0.85); }
+
+*{margin:0; padding:0; box-sizing:border-box;}
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background .25s ease, color .25s ease;
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+}
+a{color:inherit; text-decoration:none;}
+ul{list-style:none;}
+h1,h2,h3{font-family:var(--font-display); font-weight:600; letter-spacing:-0.01em;}
+
+::selection{background:var(--accent); color:var(--bg);}
+
+/* ============ SCAN LOAD OVERLAY ============ */
+.scan-overlay{
+  position:fixed; inset:0; z-index:9999;
+  background:var(--bg);
+  display:flex; align-items:center; justify-content:center;
+  pointer-events:none;
+}
+.scan-overlay svg{width:80px; height:80px;}
+.scan-overlay.done{ animation: fadeOut .5s ease forwards; }
+@keyframes fadeOut{ to{opacity:0; visibility:hidden;} }
+
+/* ============ PAGE ROUTING ============ */
+.page{ display:none; }
+.page.page-active{ display:block; }
+.hero.page-active{ display:grid; }
+
+/* ============ TOPBAR ============ */
+.topbar{
+  position: sticky; top:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 14px 24px;
+  background: rgba(11,14,20,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-left{ display:flex; align-items:center; gap:14px; }
+.icon-btn{
+  background:transparent; border:1px solid transparent;
+  color:var(--text); cursor:pointer;
+  width:38px; height:38px; border-radius:var(--radius-sm);
+  display:flex; align-items:center; justify-content:center;
+  transition: background .15s, border-color .15s;
+}
+.icon-btn:hover{ background:var(--panel); border-color:var(--border); }
+
+.logo{ display:flex; align-items:center; gap:10px; }
+.logo-svg{ filter: drop-shadow(0 0 8px rgba(61,220,151,0.25)); }
+.logo-text{ display:flex; flex-direction:column; line-height:1.1; }
+.logo-title{ font-family:var(--font-display); font-weight:700; font-size:1.15rem; letter-spacing:-0.02em; }
+.logo-sub{ font-family:var(--font-mono); font-size:0.62rem; color:var(--text-dim); letter-spacing:0.08em; text-transform:uppercase; }
+
+/* Theme (night mode) toggle */
+.theme-toggle{
+  display:flex; align-items:center; gap:8px;
+  background:var(--panel); border:1px solid var(--border);
+  padding:6px 8px 6px 12px; border-radius:999px;
+  cursor:pointer; color:var(--text-dim);
+  font-family:var(--font-mono); font-size:0.72rem;
+  transition: border-color .2s, color .2s;
+}
+.theme-toggle svg{ color: var(--text-dim); transition: color .2s; }
+.theme-toggle[aria-pressed="true"]{ border-color: var(--neutral); color:var(--neutral); }
+.theme-toggle[aria-pressed="true"] svg{ color: var(--neutral); }
+.theme-label{ text-transform:uppercase; letter-spacing:0.05em; }
+.theme-switch{
+  width:34px; height:19px; border-radius:999px;
+  background:#2a3145; position:relative; flex-shrink:0;
+  transition: background .2s;
+}
+.theme-toggle[aria-pressed="true"] .theme-switch{ background: linear-gradient(90deg,#3a4570,#6C8CFF); }
+.theme-knob{
+  position:absolute; top:2px; left:2px;
+  width:15px; height:15px; border-radius:50%;
+  background:#E8EAED; transition: left .2s;
+}
+.theme-toggle[aria-pressed="true"] .theme-knob{ left:17px; }
+
+/* ============ SIDEBAR ============ */
+.sidebar{
+  position:fixed; top:0; left:0; bottom:0; z-index:300;
+  width:290px;
+  background: var(--panel);
+  border-right:1px solid var(--border);
+  display:flex; flex-direction:column;
+  transform: translateX(-100%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+}
+.sidebar.open{ transform: translateX(0); }
+.sidebar-scrim{
+  position:fixed; inset:0; z-index:290;
+  background:rgba(0,0,0,0.5);
+  opacity:0; visibility:hidden;
+  transition: opacity .3s;
+}
+.sidebar-scrim.show{ opacity:1; visibility:visible; }
+
+.sidebar-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 18px 16px;
+  border-bottom:1px solid var(--border);
+}
+.logo-mini{ display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-weight:600; }
+
+.sidebar-section-label{
+  font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase;
+  letter-spacing:0.1em; color:var(--text-dim); padding:18px 18px 8px;
+}
+.sidebar-nav{ padding:0 10px; display:flex; flex-direction:column; gap:2px; flex:1; overflow-y:auto; }
+.sidebar-nav a{
+  display:flex; align-items:center; gap:11px;
+  padding:10px 12px; border-radius:var(--radius-sm);
+  color:var(--text-dim); font-size:0.88rem; font-weight:500;
+  transition: background .15s, color .15s;
+}
+.sidebar-nav a svg{ flex-shrink:0; opacity:0.8; }
+.sidebar-nav a:hover{ background:var(--panel-2); color:var(--text); }
+.sidebar-nav a.active{ background:rgba(61,220,151,0.1); color:var(--accent); }
+.sidebar-nav a.active svg{ opacity:1; }
+
+.sidebar-footer{ padding:16px; border-top:1px solid var(--border); }
+.formateur-card{ display:flex; align-items:center; gap:10px; }
+.formateur-avatar{
+  width:36px; height:36px; border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--neutral));
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:700; color:var(--bg);
+}
+.formateur-name{ font-size:0.85rem; font-weight:600; }
+.formateur-role{ font-size:0.72rem; color:var(--text-dim); font-family:var(--font-mono); }
+
+/* ============ HERO ============ */
+.hero{
+  position:relative; overflow:hidden;
+  padding: 72px 40px 60px;
+  display:grid; grid-template-columns: 1.1fr 0.9fr;
+  align-items:center; gap:24px;
+  min-height: 78vh;
+}
+.hero-grid-bg{
+  position:absolute; inset:0; z-index:0;
+  background-image:
+    linear-gradient(rgba(61,220,151,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61,220,151,0.05) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(ellipse 70% 60% at 30% 40%, black 10%, transparent 75%);
+}
+.hero-content{ position:relative; z-index:2; }
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.06em;
+  color:var(--accent); background:rgba(61,220,151,0.08);
+  border:1px solid rgba(61,220,151,0.25);
+  padding:6px 12px; border-radius:999px; margin-bottom:22px;
+}
+.eyebrow-dot{ width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); animation:pulse 2s infinite; }
+@keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+.hero-title{
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  line-height: 1.05;
+  margin-bottom: 22px;
+}
+.text-accent{ color:var(--accent); }
+.hero-desc{ color:var(--text-dim); max-width:520px; font-size:1.02rem; margin-bottom:32px; }
+.hero-actions{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:48px; }
+
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:13px 22px; border-radius:var(--radius-sm);
+  font-weight:600; font-size:0.92rem; cursor:pointer;
+  border:1px solid transparent; transition: transform .15s, background .15s, border-color .15s;
+}
+.btn:hover{ transform: translateY(-1px); }
+.btn-primary{ background:var(--accent); color:#04140c; }
+.btn-primary:hover{ background:#4eeaa8; }
+.btn-ghost{ border-color:var(--border); color:var(--text); background:transparent; }
+.btn-ghost:hover{ border-color:var(--accent); color:var(--accent); }
+
+.hero-stats{ display:flex; gap:36px; position:relative; z-index:2; }
+.stat{ display:flex; flex-direction:column; }
+.stat-num{ font-family:var(--font-display); font-size:1.8rem; font-weight:700; color:var(--accent); }
+.stat-label{ font-family:var(--font-mono); font-size:0.7rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em; }
+
+.hero-visual{ position:relative; z-index:1; display:flex; justify-content:center; }
+.hero-shield-big{ width:min(360px, 100%); height:auto; animation: floatY 5s ease-in-out infinite; }
+@keyframes floatY{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-14px);} }
+
+#shieldPath{ stroke-dasharray: 900; stroke-dashoffset:900; animation: drawShield 1.8s ease-out forwards .3s; }
+@keyframes drawShield{ to{ stroke-dashoffset:0; } }
+
+/* ============ MODULES (shared) ============ */
+.module{ padding: 80px 40px; max-width:1240px; margin:0 auto; }
+.module-alt{ background: var(--bg-alt); max-width:none; }
+.module-alt > *{ max-width:1240px; margin-left:auto; margin-right:auto; }
+
+.module-head{ display:flex; gap:22px; align-items:flex-start; margin-bottom:44px; }
+.module-index{
+  font-family:var(--font-mono); font-size:0.85rem; color:var(--accent);
+  border:1px solid var(--border); border-radius:8px;
+  padding:6px 11px; flex-shrink:0; margin-top:4px;
+}
+.module-head h2{ font-size:clamp(1.6rem,3vw,2.2rem); margin-bottom:8px; }
+.module-sub{ color:var(--text-dim); max-width:640px; }
+
+/* ============ MODULE 1: HAT GRID ============ */
+.hat-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; }
+.hat-card{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+  padding:26px; transition: border-color .2s, transform .2s;
+}
+.hat-card:hover{ transform:translateY(-4px); border-color:var(--accent); }
+.hat-icon{ width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; background:var(--panel-2); }
+.hat-black .hat-icon{ color:var(--danger); }
+.hat-white .hat-icon{ color:var(--safe); }
+.hat-grey .hat-icon{ color:var(--text-dim); }
+.hat-script .hat-icon{ color:var(--warn); }
+.hat-hacktiv .hat-icon{ color:var(--neutral); }
+.hat-state .hat-icon{ color:var(--danger); }
+
+.hat-card h3{ font-size:1.1rem; margin-bottom:8px; }
+.hat-tag{ display:inline-block; font-family:var(--font-mono); font-size:0.65rem; text-transform:uppercase; letter-spacing:0.06em; padding:4px 9px; border-radius:999px; margin-bottom:12px; }
+.tag-danger{ background:rgba(255,107,91,0.12); color:var(--danger); }
+.tag-safe{ background:rgba(61,220,151,0.12); color:var(--safe); }
+.tag-warn{ background:rgba(255,159,28,0.12); color:var(--warn); }
+.tag-neutral{ background:rgba(108,140,255,0.12); color:var(--neutral); }
+.hat-card p{ color:var(--text-dim); font-size:0.9rem; }
+
+/* ============ MODULE 2: ATTACK LIST ============ */
+.attack-list{ display:flex; flex-direction:column; gap:12px; }
+.attack-item{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+  overflow:hidden;
+}
+.attack-summary{
+  display:flex; align-items:center; gap:16px; padding:20px 24px;
+  cursor:pointer; user-select:none; list-style:none;
+}
+.attack-summary::-webkit-details-marker{ display:none; }
+.attack-num{ font-family:var(--font-mono); color:var(--text-dim); font-size:0.85rem; width:28px; flex-shrink:0; }
+.attack-icon{ width:38px; height:38px; border-radius:10px; background:var(--panel-2); display:flex; align-items:center; justify-content:center; color:var(--warn); flex-shrink:0; }
+.attack-title{ font-weight:600; flex:1; }
+.attack-chevron{ color:var(--text-dim); transition: transform .2s; flex-shrink:0; }
+.attack-item[open] .attack-chevron{ transform:rotate(90deg); }
+.attack-body{ padding:0 24px 24px 78px; color:var(--text-dim); font-size:0.92rem; }
+.attack-body b{ color:var(--text); font-weight:600; }
+
+/* ============ MODULE 3: KILL CHAIN ============ */
+.kill-chain{ position:relative; display:flex; flex-direction:column; gap:0; }
+.kc-step{ display:grid; grid-template-columns:60px 1fr; gap:22px; position:relative; padding-bottom:34px; }
+.kc-step:last-child{ padding-bottom:0; }
+.kc-marker{
+  width:44px; height:44px; border-radius:50%;
+  background:var(--panel); border:2px solid var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-weight:600; color:var(--accent); z-index:2;
+}
+.kc-step:not(:last-child)::before{
+  content:''; position:absolute; left:22px; top:44px; bottom:0; width:2px;
+  background: linear-gradient(var(--border), var(--border));
+}
+.kc-content{ background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:18px 22px; }
+.kc-content h4{ font-family:var(--font-display); font-size:1.02rem; margin-bottom:6px; }
+.kc-content p{ color:var(--text-dim); font-size:0.9rem; }
+
+/* ============ MODULE 4: PREVENTION GRID ============ */
+.prevent-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:16px; }
+.prevent-card{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+  padding:22px; display:flex; gap:16px; align-items:flex-start;
+}
+.prevent-icon{ width:40px; height:40px; border-radius:10px; background:rgba(61,220,151,0.1); color:var(--accent); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.prevent-card h4{ font-family:var(--font-display); font-size:1rem; margin-bottom:6px; }
+.prevent-card p{ color:var(--text-dim); font-size:0.88rem; }
+
+/* ============ MODULE 5: CHECKLIST ============ */
+.protect-checklist{ display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+.protect-item{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--radius-sm);
+  padding:16px 18px; display:flex; gap:12px; align-items:flex-start;
+  cursor:pointer; transition: border-color .15s, background .15s;
+}
+.protect-item:hover{ border-color:var(--accent); }
+.protect-item.checked{ background:rgba(61,220,151,0.06); border-color:var(--accent); }
+.protect-check{
+  width:22px; height:22px; border-radius:6px; border:2px solid var(--border);
+  flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center;
+  transition: background .15s, border-color .15s;
+}
+.protect-item.checked .protect-check{ background:var(--accent); border-color:var(--accent); }
+.protect-check svg{ opacity:0; transition:opacity .15s; color:#04140c; }
+.protect-item.checked .protect-check svg{ opacity:1; }
+.protect-item p{ font-size:0.87rem; color:var(--text-dim); }
+.protect-item.checked p{ color:var(--text); }
+
+/* ============ QUIZ ============ */
+.quiz-box{ max-width:720px; margin:0 auto; }
+.quiz-progress{ display:flex; gap:6px; margin-bottom:28px; }
+.quiz-progress-seg{ height:4px; flex:1; background:var(--border); border-radius:2px; overflow:hidden; }
+.quiz-progress-seg.filled{ background:var(--accent); }
+.quiz-card{ background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:32px; }
+.quiz-q{ font-family:var(--font-display); font-size:1.2rem; margin-bottom:22px; }
+.quiz-options{ display:flex; flex-direction:column; gap:10px; }
+.quiz-option{
+  text-align:left; padding:14px 18px; border-radius:var(--radius-sm);
+  border:1px solid var(--border); background:var(--panel-2); color:var(--text);
+  font-family:var(--font-body); font-size:0.92rem; cursor:pointer;
+  transition: border-color .15s, background .15s;
+}
+.quiz-option:hover{ border-color:var(--accent); }
+.quiz-option.correct{ border-color:var(--safe); background:rgba(61,220,151,0.12); }
+.quiz-option.wrong{ border-color:var(--danger); background:rgba(255,107,91,0.12); }
+.quiz-option[disabled]{ cursor:default; }
+.quiz-feedback{ margin-top:18px; padding:14px 16px; border-radius:var(--radius-sm); font-size:0.88rem; display:none; }
+.quiz-feedback.show{ display:block; }
+.quiz-feedback.ok{ background:rgba(61,220,151,0.1); color:var(--safe); }
+.quiz-feedback.ko{ background:rgba(255,107,91,0.1); color:var(--danger); }
+.quiz-next{ margin-top:20px; }
+.quiz-result{ text-align:center; padding:40px 20px; }
+.quiz-result-score{ font-family:var(--font-display); font-size:3rem; color:var(--accent); font-weight:700; }
+.quiz-result p{ color:var(--text-dim); margin-top:10px; }
+
+/* ============ FOOTER ============ */
+.site-footer{
+  padding:40px; text-align:center; border-top:1px solid var(--border);
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  color:var(--text-dim); font-size:0.85rem;
+}
+.footer-logo{ display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-weight:600; color:var(--text); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 900px){
+  .hero{ grid-template-columns:1fr; padding:56px 22px 40px; text-align:left; }
+  .hero-visual{ order:-1; margin-bottom:20px; }
+  .hero-shield-big{ width:220px; }
+  .hero-stats{ gap:24px; flex-wrap:wrap; }
+  .module{ padding:56px 22px; }
+  .hat-grid{ grid-template-columns:1fr 1fr; }
+  .prevent-grid{ grid-template-columns:1fr; }
+  .protect-checklist{ grid-template-columns:1fr 1fr; }
+  .attack-body{ padding-left:24px; }
+}
+@media (max-width: 560px){
+  .hat-grid{ grid-template-columns:1fr; }
+  .protect-checklist{ grid-template-columns:1fr; }
+  .topbar{ padding:12px 16px; }
+  .logo-sub{ display:none; }
+  .premium-label{ display:none; }
+}
+
+/* focus visibility */
+a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+</style>
+</head>
+<body>
+
+<!-- Scan overlay for load animation -->
+<div class="scan-overlay" id="scanOverlay"></div>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-head">
+    <div class="logo-mini">
+      <svg viewBox="0 0 48 48" width="28" height="28">
+        <use href="#logo-shield"></use>
       </svg>
-    </label>
-    <label
-      class="has-[:checked]:shadow-lg relative w-full h-16 p-4 ease-in-out duration-300 border-solid border-black/10 has-[:checked]:border group flex flex-row gap-3 items-center justify-center text-black rounded-xl"
-      for="profile"
-    >
-      <input id="profile" name="path" type="radio" class="hidden peer/expand" />
-      <svg
-        viewBox="0 0 24 24"
-        height="24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-        class="peer-hover/expand:scale-125 peer-hover/expand:text-blue-400 peer-hover/expand:fill-blue-400 peer-checked/expand:text-blue-400 peer-checked/expand:fill-blue-400 text-2xl peer-checked/expand:scale-125 ease-in-out duration-300"
-      >
-        <path
-          d="M12 2a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 8a3 3 0 1 1 3-3 3 3 0 0 1-3 3zm9 11v-1a7 7 0 0 0-7-7h-4a7 7 0 0 0-7 7v1h2v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1z"
-        ></path>
+      <span>OverLab</span>
+    </div>
+    <button class="icon-btn" id="closeSidebar" aria-label="Fermer le menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="sidebar-section-label">Programme</div>
+  <ul class="sidebar-nav">
+    <li><a href="#accueil" class="nav-link active" data-target="accueil">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
+      Accueil
+    </a></li>
+    <li><a href="#module-1" class="nav-link" data-target="module-1">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0116 0v2"/></svg>
+      01 — Les hackers
+    </a></li>
+    <li><a href="#module-2" class="nav-link" data-target="module-2">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      02 — Types de piratage
+    </a></li>
+    <li><a href="#module-3" class="nav-link" data-target="module-3">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></svg>
+      03 — Anatomie d'une attaque
+    </a></li>
+    <li><a href="#module-4" class="nav-link" data-target="module-4">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>
+      04 — Prévention
+    </a></li>
+    <li><a href="#module-5" class="nav-link" data-target="module-5">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/><circle cx="12" cy="15" r="1.5"/></svg>
+      05 — Se protéger
+    </a></li>
+    <li><a href="#quiz" class="nav-link" data-target="quiz">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 .3c0 1.7-2.5 1.7-2.5 3.7"/><circle cx="12" cy="17" r="0.3" fill="currentColor"/></svg>
+      Quiz final
+    </a></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <div class="formateur-card">
+      <div class="formateur-avatar">A</div>
+      <div>
+        <div class="formateur-name">Abimaël</div>
+        <div class="formateur-role">Formateur · Overdev</div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="sidebar-scrim" id="sidebarScrim"></div>
+
+<!-- Header -->
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" id="openSidebar" aria-label="Ouvrir le menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="logo">
+      <svg viewBox="0 0 48 48" width="34" height="34" class="logo-svg">
+        <use href="#logo-shield"></use>
       </svg>
-    </label>
-    <label
-      class="has-[:checked]:shadow-lg relative w-full h-16 p-4 ease-in-out duration-300 border-solid border-black/10 has-[:checked]:border group flex flex-row gap-3 items-center justify-center text-black rounded-xl"
-      for="messages"
-    >
-      <input
-        id="messages"
-        name="path"
-        type="radio"
-        class="hidden peer/expand"
-      />
-      <svg
-        viewBox="0 0 24 24"
-        height="24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-        class="peer-hover/expand:scale-125 peer-hover/expand:text-blue-400 peer-hover/expand:fill-blue-400 peer-checked/expand:text-blue-400 peer-checked/expand:fill-blue-400 text-2xl peer-checked/expand:scale-125 ease-in-out duration-300"
-      >
-        <path
-          d="M5 18v3.766l1.515-.909L11.277 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h1zM4 8h12v8h-5.277L7 18.234V16H4V8z"
-        ></path>
-        <path
-          d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"
-        ></path>
+      <div class="logo-text">
+        <span class="logo-title">OverLab</span>
+        <span class="logo-sub">by Overdev</span>
+      </div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Basculer le mode nuit">
+      <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <span class="theme-label" id="themeLabel">Nuit</span>
+      <span class="theme-switch"><span class="theme-knob"></span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero page" id="accueil">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-content">
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        Formation interactive · Niveau débutant
+      </div>
+      <h1 class="hero-title">Comprendre pour<br><span class="text-accent">se défendre.</span></h1>
+      <p class="hero-desc">
+        OverLab est un espace d'entraînement à la cybersécurité. Vous allez apprendre à reconnaître
+        les hackers, décoder leurs méthodes, comprendre comment une attaque se déroule — et surtout,
+        comment vous en protéger concrètement.
+      </p>
+      <div class="hero-actions">
+        <a href="#module-1" class="btn btn-primary nav-link" data-target="module-1">
+          Commencer le module 01
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#quiz" class="btn btn-ghost nav-link" data-target="quiz">Tester mes connaissances</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <svg viewBox="0 0 400 400" class="hero-shield-big">
+        <use href="#logo-shield-detailed"></use>
       </svg>
-    </label>
-    <label
-      class="has-[:checked]:shadow-lg relative w-full h-16 p-4 ease-in-out duration-300 border-solid border-black/10 has-[:checked]:border group flex flex-row gap-3 items-center justify-center text-black rounded-xl"
-      for="help"
-    >
-      <input id="help" name="path" type="radio" class="hidden peer/expand" />
-      <svg
-        viewBox="0 0 24 24"
-        height="24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-        class="peer-hover/expand:scale-125 peer-hover/expand:text-blue-400 peer-hover/expand:fill-blue-400 peer-checked/expand:text-blue-400 peer-checked/expand:fill-blue-400 text-2xl peer-checked/expand:scale-125 ease-in-out duration-300"
-      >
-        <path
-          d="M11.953 2C6.465 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.493 2 11.953 2zM12 20c-4.411 0-8-3.589-8-8s3.567-8 7.953-8C16.391 4 20 7.589 20 12s-3.589 8-8 8z"
-        ></path>
-        <path d="M11 7h2v7h-2zm0 8h2v2h-2z"></path>
-      </svg>
-    </label>
-    <label
-      class="has-[:checked]:shadow-lg relative w-full h-16 p-4 ease-in-out duration-300 border-solid border-black/10 has-[:checked]:border group flex flex-row gap-3 items-center justify-center text-black rounded-xl"
-      for="settings"
-    >
-      <input
-        id="settings"
-        name="path"
-        type="radio"
-        class="hidden peer/expand"
-      />
-      <svg
-        viewBox="0 0 24 24"
-        height="24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-        class="peer-hover/expand:scale-125 peer-hover/expand:text-blue-400 peer-hover/expand:fill-blue-400 peer-checked/expand:text-blue-400 peer-checked/expand:fill-blue-400 text-2xl peer-checked/expand:scale-125 ease-in-out duration-300"
-      >
-        <path
-          d="M12 16c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm0-6c1.084 0 2 .916 2 2s-.916 2-2 2-2-.916-2-2 .916-2 2-2z"
-        ></path>
-        <path
-          d="m2.845 16.136 1 1.73c.531.917 1.809 1.261 2.73.73l.529-.306A8.1 8.1 0 0 0 9 19.402V20c0 1.103.897 2 2 2h2c1.103 0 2-.897 2-2v-.598a8.132 8.132 0 0 0 1.896-1.111l.529.306c.923.53 2.198.188 2.731-.731l.999-1.729a2.001 2.001 0 0 0-.731-2.732l-.505-.292a7.718 7.718 0 0 0 0-2.224l.505-.292a2.002 2.002 0 0 0 .731-2.732l-.999-1.729c-.531-.92-1.808-1.265-2.731-.732l-.529.306A8.1 8.1 0 0 0 15 4.598V4c0-1.103-.897-2-2-2h-2c-1.103 0-2 .897-2 2v.598a8.132 8.132 0 0 0-1.896 1.111l-.529-.306c-.924-.531-2.2-.187-2.731.732l-.999 1.729a2.001 2.001 0 0 0 .731 2.732l.505.292a7.683 7.683 0 0 0 0 2.223l-.505.292a2.003 2.003 0 0 0-.731 2.733zm3.326-2.758A5.703 5.703 0 0 1 6 12c0-.462.058-.926.17-1.378a.999.999 0 0 0-.47-1.108l-1.123-.65.998-1.729 1.145.662a.997.997 0 0 0 1.188-.142 6.071 6.071 0 0 1 2.384-1.399A1 1 0 0 0 11 5.3V4h2v1.3a1 1 0 0 0 .708.956 6.083 6.083 0 0 1 2.384 1.399.999.999 0 0 0 1.188.142l1.144-.661 1 1.729-1.124.649a1 1 0 0 0-.47 1.108c.112.452.17.916.17 1.378 0 .461-.058.925-.171 1.378a1 1 0 0 0 .471 1.108l1.123.649-.998 1.729-1.145-.661a.996.996 0 0 0-1.188.142 6.071 6.071 0 0 1-2.384 1.399A1 1 0 0 0 13 18.7l.002 1.3H11v-1.3a1 1 0 0 0-.708-.956 6.083 6.083 0 0 1-2.384-1.399.992.992 0 0 0-1.188-.141l-1.144.662-1-1.729 1.124-.651a1 1 0 0 0 .471-1.108z"
-        ></path>
-      </svg>
-    </label>
-  </article>
-</div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">5</span><span class="stat-label">Modules</span></div>
+      <div class="stat"><span class="stat-num">12+</span><span class="stat-label">Types d'attaques</span></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Pratique</span></div>
+    </div>
+  </section>
+
+  <!-- MODULE 1 : HACKERS -->
+  <section class="module page" id="module-1">
+    <div class="module-head">
+      <span class="module-index">01</span>
+      <div>
+        <h2>Les différents types de hackers</h2>
+        <p class="module-sub">Tous les hackers ne sont pas des criminels. Le "chapeau" indique l'intention.</p>
+      </div>
+    </div>
+
+    <div class="hat-grid">
+      <article class="hat-card hat-black">
+        <div class="hat-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4l16 16M4 20L20 4"/><circle cx="12" cy="12" r="9"/></svg>
+        </div>
+        <h3>Black Hat</h3>
+        <span class="hat-tag tag-danger">Malveillant</span>
+        <p>Agit sans autorisation, pour le profit, le sabotage ou par pure malveillance. Vole des données, extorque, détruit des systèmes.</p>
+      </article>
+
+      <article class="hat-card hat-white">
+        <div class="hat-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <h3>White Hat</h3>
+        <span class="hat-tag tag-safe">Éthique</span>
+        <p>Hacker éthique, mandaté légalement pour trouver des failles avant les attaquants (pentesting, bug bounty).</p>
+      </article>
+
+      <article class="hat-card hat-grey">
+        <div class="hat-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 000 18z" fill="currentColor" stroke="none" opacity="0.3"/></svg>
+        </div>
+        <h3>Grey Hat</h3>
+        <span class="hat-tag tag-warn">Ambigu</span>
+        <p>Explore des systèmes sans autorisation mais sans intention nuisible, révèle parfois la faille après coup — reste illégal.</p>
+      </article>
+
+      <article class="hat-card hat-script">
+        <div class="hat-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3>Script Kiddie</h3>
+        <span class="hat-tag tag-warn">Débutant</span>
+        <p>Utilise des outils et scripts créés par d'autres, sans réelle expertise technique — imprévisible et parfois dangereux.</p>
+      </article>
+
+      <article class="hat-card hat-hacktiv">
+        <div class="hat-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg>
+        </div>
+        <h3>Hacktiviste</h3>
+        <span class="hat-tag tag-neutral">Militant</span>
+        <p>Pirate pour une cause politique, sociale ou idéologique. Défacement de sites, fuites de données pour dénoncer.</p>
+      </article>
+
+      <article class="hat-card hat-state">
+        <div class="hat-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/></svg>
+        </div>
+        <h3>Acteur étatique</h3>
+        <span class="hat-tag tag-danger">Stratégique</span>
+        <p>Groupes soutenus par des États pour l'espionnage, le sabotage d'infrastructures ou la guerre informationnelle (APT).</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- MODULE 2 : TYPES DE PIRATAGE -->
+  <section class="module module-alt page" id="module-2">
+    <div class="module-head">
+      <span class="module-index">02</span>
+      <div>
+        <h2>Les types de piratage / attaques</h2>
+        <p class="module-sub">Chaque attaque exploite une faiblesse différente : technique, humaine ou logicielle.</p>
+      </div>
+    </div>
+
+    <div class="attack-list" id="attackList"><!-- injected by JS --></div>
+  </section>
+
+  <!-- MODULE 3 : ANATOMIE -->
+  <section class="module page" id="module-3">
+    <div class="module-head">
+      <span class="module-index">03</span>
+      <div>
+        <h2>Comment une attaque est lancée</h2>
+        <p class="module-sub">Les attaques suivent presque toujours le même cycle, appelé "cyber kill chain".</p>
+      </div>
+    </div>
+
+    <div class="kill-chain" id="killChain"><!-- injected by JS --></div>
+  </section>
+
+  <!-- MODULE 4 : PREVENTION -->
+  <section class="module module-alt page" id="module-4">
+    <div class="module-head">
+      <span class="module-index">04</span>
+      <div>
+        <h2>Prévenir les attaques</h2>
+        <p class="module-sub">La prévention agit en amont : réduire la surface d'attaque avant qu'elle ne soit exploitée.</p>
+      </div>
+    </div>
+    <div class="prevent-grid" id="preventGrid"><!-- injected by JS --></div>
+  </section>
+
+  <!-- MODULE 5 : PROTECTION -->
+  <section class="module page" id="module-5">
+    <div class="module-head">
+      <span class="module-index">05</span>
+      <div>
+        <h2>Se protéger au quotidien</h2>
+        <p class="module-sub">Des réflexes simples, applicables dès aujourd'hui, personnellement et professionnellement.</p>
+      </div>
+    </div>
+    <div class="protect-checklist" id="protectChecklist"><!-- injected by JS --></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="module module-alt quiz-section page" id="quiz">
+    <div class="module-head">
+      <span class="module-index">✓</span>
+      <div>
+        <h2>Quiz final</h2>
+        <p class="module-sub">Validez vos acquis avant de clôturer la formation.</p>
+      </div>
+    </div>
+    <div class="quiz-box" id="quizBox"><!-- injected by JS --></div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-logo">
+      <svg viewBox="0 0 48 48" width="24" height="24"><use href="#logo-shield"></use></svg>
+      <span>OverLab</span>
+    </div>
+    <p>Créé par <strong>Overdev</strong> · Formateur : <strong>Abimaël</strong></p>
+  </footer>
+
+</main>
+
+<!-- SVG defs (logo, illustrations) -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="logo-shield" viewBox="0 0 48 48">
+      <path d="M24 3l17 6v11c0 12-7 19.5-17 25C14 39.5 7 32 7 20V9l17-6z" fill="url(#shieldGrad)"/>
+      <path d="M24 3l17 6v11c0 12-7 19.5-17 25C14 39.5 7 32 7 20V9l17-6z" fill="none" stroke="#3DDC97" stroke-width="1" opacity="0.5"/>
+      <path d="M16 24l5 5 11-12" fill="none" stroke="#0B0E14" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16 24l5 5 11-12" fill="none" stroke="#E8EAED" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs>
+        <linearGradient id="shieldGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#3DDC97"/>
+          <stop offset="100%" stop-color="#1B9E6E"/>
+        </linearGradient>
+      </defs>
+    </symbol>
+
+    <symbol id="logo-shield-detailed" viewBox="0 0 400 400">
+      <g stroke="#3DDC97" stroke-width="1" opacity="0.15">
+        <circle cx="200" cy="200" r="170" fill="none"/>
+        <circle cx="200" cy="200" r="130" fill="none"/>
+        <circle cx="200" cy="200" r="90" fill="none"/>
+      </g>
+      <path id="shieldPath" d="M200 40l120 42v78c0 85-50 138-120 178-70-40-120-93-120-178V82l120-42z"
+        fill="rgba(61,220,151,0.06)" stroke="#3DDC97" stroke-width="2.5"/>
+      <path d="M140 200l40 40 90-95" fill="none" stroke="#3DDC97" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <g fill="#FF9F1C" opacity="0.8">
+        <circle cx="90" cy="120" r="3"/>
+        <circle cx="320" cy="160" r="3"/>
+        <circle cx="300" cy="300" r="3"/>
+        <circle cx="100" cy="290" r="3"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<script>
+// ============ MODULE 2 : TYPES DE PIRATAGE ============
+const ATTACKS = [
+  {
+    title: "Phishing (hameçonnage)",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>`,
+    lancement: "L'attaquant envoie un email, SMS ou message imitant une entité de confiance (banque, service, collègue) pour pousser la victime à cliquer un lien ou saisir des identifiants.",
+    fonctionnement: "Le lien mène vers un faux site quasi identique à l'original. Les identifiants saisis sont capturés et réutilisés par l'attaquant."
+  },
+  {
+    title: "Ransomware (rançongiciel)",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>`,
+    lancement: "Souvent via une pièce jointe piégée, un lien malveillant ou une faille non corrigée exploitée à distance.",
+    fonctionnement: "Le logiciel chiffre les fichiers de la victime, les rendant inaccessibles, puis affiche une demande de rançon pour fournir la clé de déchiffrement."
+  },
+  {
+    title: "Attaque par déni de service (DDoS)",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M9.5 9.5L6.5 6.5M14.5 9.5l3-3M9.5 14.5l-3 3M14.5 14.5l3 3"/></svg>`,
+    lancement: "Un réseau d'appareils infectés (botnet) est commandé à distance pour envoyer un volume massif de requêtes simultanées.",
+    fonctionnement: "Le serveur ciblé est saturé et ne peut plus répondre aux utilisateurs légitimes, rendant le service indisponible."
+  },
+  {
+    title: "Ingénierie sociale",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 016-6h0a6 6 0 016 6v1"/><circle cx="18" cy="8" r="2.4"/><path d="M16 20v-1a4 4 0 014-4"/></svg>`,
+    lancement: "L'attaquant manipule psychologiquement la victime — urgence, autorité feinte, sympathie — au téléphone, en personne ou en ligne.",
+    fonctionnement: "La victime, mise en confiance ou sous pression, divulgue des informations sensibles ou effectue une action (virement, accès) sans vérifier."
+  },
+  {
+    title: "Injection SQL",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>`,
+    lancement: "L'attaquant insère du code malveillant dans un champ de saisie (formulaire, barre de recherche) d'un site mal sécurisé.",
+    fonctionnement: "La base de données interprète ce code comme une commande légitime, exposant, modifiant ou supprimant des données normalement protégées."
+  },
+  {
+    title: "Attaque de l'homme du milieu (MITM)",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="12" r="2.5"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M7.5 12h2.5M14 12h2.5"/></svg>`,
+    lancement: "L'attaquant s'insère dans une communication, souvent via un réseau Wi-Fi public non sécurisé ou compromis.",
+    fonctionnement: "Il intercepte, lit voire modifie les échanges entre deux parties qui pensent communiquer directement l'une avec l'autre."
+  },
+  {
+    title: "Malware / logiciels malveillants",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9l6 6M15 9l-6 6"/></svg>`,
+    lancement: "Installation via téléchargement piégé, clé USB infectée, pièce jointe ou faille logicielle non corrigée.",
+    fonctionnement: "Selon le type (virus, cheval de Troie, spyware), le logiciel s'exécute discrètement pour voler des données, espionner ou endommager le système."
+  },
+  {
+    title: "Attaque par force brute",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="10" width="12" height="10" rx="2"/><path d="M9 10V7a3 3 0 016 0v3"/></svg>`,
+    lancement: "Un logiciel automatisé teste systématiquement des combinaisons de mots de passe sur un compte ciblé.",
+    fonctionnement: "Avec suffisamment de temps et un mot de passe faible, l'outil finit par trouver la bonne combinaison et accède au compte."
+  },
+];
+
+// ============ MODULE 3 : KILL CHAIN ============
+const KILL_CHAIN = [
+  { step:"01", title:"Reconnaissance", desc:"L'attaquant collecte des informations sur la cible : employés, technologies utilisées, adresses email, réseaux sociaux." },
+  { step:"02", title:"Préparation de l'arme", desc:"Il conçoit ou choisit l'outil d'attaque adapté : malware, email de phishing, script d'exploitation d'une faille." },
+  { step:"03", title:"Livraison", desc:"L'outil est transmis à la cible via email, site web piégé, clé USB, ou une faille exposée sur le réseau." },
+  { step:"04", title:"Exploitation", desc:"La faille ou la victime déclenche l'attaque : un lien est cliqué, une pièce jointe ouverte, un service vulnérable est atteint." },
+  { step:"05", title:"Installation", desc:"L'attaquant installe un accès persistant (porte dérobée) pour revenir dans le système même si la faille initiale est corrigée." },
+  { step:"06", title:"Prise de contrôle", desc:"Il établit un canal de communication avec le système compromis pour le piloter à distance." },
+  { step:"07", title:"Action sur l'objectif", desc:"Vol de données, chiffrement pour rançon, sabotage, ou utilisation de la machine pour attaquer d'autres cibles." },
+];
+
+// ============ MODULE 4 : PREVENTION ============
+const PREVENTIONS = [
+  { title:"Mises à jour régulières", desc:"Corriger les failles connues avant qu'elles ne soient exploitées, sur tous les appareils et logiciels.", icon:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>` },
+  { title:"Authentification à deux facteurs", desc:"Ajouter une seconde vérification (code, app) rend un mot de passe volé inutile seul.", icon:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/><circle cx="12" cy="16" r="1.5"/></svg>` },
+  { title:"Sauvegardes régulières", desc:"Une copie récente et hors ligne des données neutralise l'impact d'un ransomware.", icon:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>` },
+  { title:"Formation et sensibilisation", desc:"La majorité des attaques réussissent grâce à une erreur humaine — la vigilance est la première défense.", icon:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>` },
+  { title:"Pare-feu et antivirus à jour", desc:"Filtrer le trafic suspect et détecter les logiciels malveillants avant qu'ils n'agissent.", icon:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>` },
+  { title:"Principe du moindre privilège", desc:"Chaque compte ou service n'a accès qu'à ce qui est strictement nécessaire, limitant les dégâts en cas de compromission.", icon:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3"/><path d="M6 21v-2a6 6 0 0112 0v2"/></svg>` },
+];
+
+// ============ MODULE 5 : CHECKLIST PROTECTION ============
+const PROTECTIONS = [
+  "Utiliser un mot de passe unique et complexe par compte",
+  "Activer la double authentification partout où c'est possible",
+  "Ne jamais cliquer sur un lien d'un expéditeur inconnu ou suspect",
+  "Vérifier l'URL avant de saisir des identifiants",
+  "Mettre à jour ses appareils dès que possible",
+  "Éviter le Wi-Fi public sans VPN pour les données sensibles",
+  "Sauvegarder ses données importantes régulièrement",
+  "Ne jamais partager ses codes de vérification par téléphone",
+  "Vérifier les demandes urgentes d'argent ou d'accès par un second canal",
+];
+
+// ============ QUIZ ============
+const QUIZ = [
+  {
+    q: "Un hacker mandaté légalement pour tester la sécurité d'un système est appelé :",
+    options: ["Black Hat", "White Hat", "Script Kiddie", "Hacktiviste"],
+    correct: 1,
+    explain: "Le White Hat agit avec autorisation, dans un cadre légal, pour renforcer la sécurité."
+  },
+  {
+    q: "Un email frauduleux imitant votre banque pour voler vos identifiants est une attaque de type :",
+    options: ["Ransomware", "DDoS", "Phishing", "Injection SQL"],
+    correct: 2,
+    explain: "Le phishing exploite la confiance en imitant une entité légitime."
+  },
+  {
+    q: "Dans la cyber kill chain, que se passe-t-il à l'étape 'Reconnaissance' ?",
+    options: ["L'attaquant chiffre les fichiers", "L'attaquant collecte des informations sur la cible", "L'attaquant installe une porte dérobée", "L'attaquant demande une rançon"],
+    correct: 1,
+    explain: "La reconnaissance est la phase de collecte d'informations, avant même de choisir l'outil d'attaque."
+  },
+  {
+    q: "Quelle mesure rend un mot de passe volé insuffisant pour accéder à un compte ?",
+    options: ["Un pare-feu", "Une sauvegarde", "L'authentification à deux facteurs", "Un VPN"],
+    correct: 2,
+    explain: "La double authentification ajoute une vérification supplémentaire que l'attaquant n'a pas."
+  },
+  {
+    q: "Que faut-il faire face à une demande urgente et inhabituelle de virement par email ?",
+    options: ["Exécuter rapidement pour ne pas bloquer l'activité", "Vérifier par un second canal (téléphone, en personne)", "Répondre directement à l'email pour confirmer", "Transférer l'email à un collègue au hasard"],
+    correct: 1,
+    explain: "L'urgence est une technique classique d'ingénierie sociale. Toujours vérifier par un canal indépendant."
+  },
+];
+
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* ---------- Scan load overlay ---------- */
+  const scanOverlay = document.getElementById('scanOverlay');
+  scanOverlay.innerHTML = `
+    <svg viewBox="0 0 48 48">
+      <use href="#logo-shield"></use>
+    </svg>`;
+  setTimeout(() => scanOverlay.classList.add('done'), 900);
+
+  /* ---------- Sidebar ---------- */
+  const sidebar = document.getElementById('sidebar');
+  const scrim = document.getElementById('sidebarScrim');
+  const openBtn = document.getElementById('openSidebar');
+  const closeBtn = document.getElementById('closeSidebar');
+
+  function openSidebar(){
+    sidebar.classList.add('open');
+    scrim.classList.add('show');
+    openBtn.setAttribute('aria-expanded','true');
+  }
+  function closeSidebar(){
+    sidebar.classList.remove('open');
+    scrim.classList.remove('show');
+    openBtn.setAttribute('aria-expanded','false');
+  }
+  openBtn.addEventListener('click', openSidebar);
+  closeBtn.addEventListener('click', closeSidebar);
+  scrim.addEventListener('click', closeSidebar);
+
+  /* ---------- SPA routing: show only the targeted page ---------- */
+  const pages = document.querySelectorAll('.page');
+  const spyLinks = document.querySelectorAll('.sidebar-nav a[data-target]');
+
+  function showPage(id){
+    pages.forEach(p => p.classList.toggle('page-active', p.id === id));
+    spyLinks.forEach(a => a.classList.toggle('active', a.dataset.target === id));
+    document.getElementById('main').scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+    window.scrollTo(0, 0);
+  }
+
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = link.dataset.target;
+      showPage(target);
+      closeSidebar();
+      history.replaceState(null, '', '#' + target);
+    });
+  });
+
+  // Initial page: accueil (or whatever is in the URL hash, if valid)
+  const initialId = location.hash ? location.hash.slice(1) : 'accueil';
+  const validInitial = document.getElementById(initialId) ? initialId : 'accueil';
+  showPage(validInitial);
+
+  /* ---------- Theme toggle (night / day mode) ---------- */
+  const themeToggle = document.getElementById('themeToggle');
+  const themeLabel = document.getElementById('themeLabel');
+  const themeIcon = document.getElementById('themeIcon');
+  const SUN_PATH = `<path d="M12 4V2M12 22v-2M4.9 4.9L3.5 3.5M20.5 20.5l-1.4-1.4M4 12H2M22 12h-2M4.9 19.1l-1.4 1.4M20.5 3.5l-1.4 1.4"/><circle cx="12" cy="12" r="5"/>`;
+  const MOON_PATH = `<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>`;
+
+  function applyTheme(isLight){
+    document.body.classList.toggle('light-mode', isLight);
+    themeToggle.setAttribute('aria-pressed', String(isLight));
+    themeLabel.textContent = isLight ? 'Jour' : 'Nuit';
+    themeIcon.setAttribute('fill', isLight ? 'none' : 'currentColor');
+    themeIcon.setAttribute('stroke', 'currentColor');
+    themeIcon.setAttribute('stroke-width', isLight ? '2' : '0');
+    themeIcon.innerHTML = isLight ? SUN_PATH : MOON_PATH;
+  }
+
+  themeToggle.addEventListener('click', () => {
+    const isLight = document.body.classList.contains('light-mode');
+    applyTheme(!isLight);
+  });
+
+  /* ---------- Module 2 : attacks accordion ---------- */
+  const attackList = document.getElementById('attackList');
+  attackList.innerHTML = ATTACKS.map((a, i) => `
+    <details class="attack-item">
+      <summary class="attack-summary">
+        <span class="attack-num">${String(i+1).padStart(2,'0')}</span>
+        <span class="attack-icon">${a.icon}</span>
+        <span class="attack-title">${a.title}</span>
+        <svg class="attack-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+      </summary>
+      <div class="attack-body">
+        <p><b>Comment elle est lancée :</b> ${a.lancement}</p>
+        <p style="margin-top:10px;"><b>Comment elle fonctionne :</b> ${a.fonctionnement}</p>
+      </div>
+    </details>
+  `).join('');
+
+  /* ---------- Module 3 : kill chain ---------- */
+  const killChain = document.getElementById('killChain');
+  killChain.innerHTML = KILL_CHAIN.map(k => `
+    <div class="kc-step">
+      <div class="kc-marker">${k.step}</div>
+      <div class="kc-content">
+        <h4>${k.title}</h4>
+        <p>${k.desc}</p>
+      </div>
+    </div>
+  `).join('');
+
+  /* ---------- Module 4 : prevention grid ---------- */
+  const preventGrid = document.getElementById('preventGrid');
+  preventGrid.innerHTML = PREVENTIONS.map(p => `
+    <div class="prevent-card">
+      <div class="prevent-icon">${p.icon}</div>
+      <div>
+        <h4>${p.title}</h4>
+        <p>${p.desc}</p>
+      </div>
+    </div>
+  `).join('');
+
+  /* ---------- Module 5 : checklist ---------- */
+  const protectChecklist = document.getElementById('protectChecklist');
+  protectChecklist.innerHTML = PROTECTIONS.map((p, i) => `
+    <div class="protect-item" data-idx="${i}">
+      <span class="protect-check">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <p>${p}</p>
+    </div>
+  `).join('');
+  protectChecklist.querySelectorAll('.protect-item').forEach(item => {
+    item.addEventListener('click', () => item.classList.toggle('checked'));
+  });
+
+  /* ---------- Quiz ---------- */
+  const quizBox = document.getElementById('quizBox');
+  let qIndex = 0;
+  let score = 0;
+
+  function renderProgress(){
+    return `<div class="quiz-progress">
+      ${QUIZ.map((_, i) => `<div class="quiz-progress-seg ${i < qIndex ? 'filled' : ''}"></div>`).join('')}
+    </div>`;
+  }
+
+  function renderQuestion(){
+    const item = QUIZ[qIndex];
+    quizBox.innerHTML = `
+      ${renderProgress()}
+      <div class="quiz-card">
+        <div class="quiz-q">${qIndex+1}. ${item.q}</div>
+        <div class="quiz-options">
+          ${item.options.map((opt, i) => `<button class="quiz-option" data-idx="${i}">${opt}</button>`).join('')}
+        </div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <div class="quiz-next" id="quizNextWrap" style="display:none;">
+          <button class="btn btn-primary" id="quizNext">
+            ${qIndex < QUIZ.length - 1 ? 'Question suivante' : 'Voir le résultat'}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    `;
+
+    const optionBtns = quizBox.querySelectorAll('.quiz-option');
+    optionBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const chosen = parseInt(btn.dataset.idx);
+        optionBtns.forEach(b => b.setAttribute('disabled','true'));
+        const feedback = document.getElementById('quizFeedback');
+        if (chosen === item.correct){
+          btn.classList.add('correct');
+          feedback.classList.add('show','ok');
+          feedback.textContent = '✓ Correct — ' + item.explain;
+          score++;
+        } else {
+          btn.classList.add('wrong');
+          optionBtns[item.correct].classList.add('correct');
+          feedback.classList.add('show','ko');
+          feedback.textContent = '✗ Pas tout à fait — ' + item.explain;
+        }
+        document.getElementById('quizNextWrap').style.display = 'block';
+      });
+    });
+
+    document.getElementById('quizNext')?.addEventListener('click', () => {
+      qIndex++;
+      if (qIndex < QUIZ.length){
+        renderQuestion();
+      } else {
+        renderResult();
+      }
+    });
+  }
+
+  function renderResult(){
+    const pct = Math.round((score / QUIZ.length) * 100);
+    let msg = "Continuez à vous entraîner — la vigilance se construit avec la pratique.";
+    if (pct >= 80) msg = "Excellent niveau de vigilance. Vous êtes prêt·e à repérer les menaces courantes.";
+    else if (pct >= 50) msg = "Bonne base ! Revoyez les modules concernés pour consolider.";
+
+    quizBox.innerHTML = `
+      <div class="quiz-card quiz-result">
+        <div class="quiz-result-score">${score}/${QUIZ.length}</div>
+        <p>${msg}</p>
+        <div style="margin-top:24px;">
+          <button class="btn btn-ghost" id="quizRestart">Recommencer le quiz</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('quizRestart').addEventListener('click', () => {
+      qIndex = 0; score = 0; renderQuestion();
+    });
+  }
+
+  renderQuestion();
+});
+
+</script>
+</body>
+</html>
