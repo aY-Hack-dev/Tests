@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,7 +7,7 @@
 <title>OverLab — Formation Cybersécurité</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <style>
 /* ============ TOKENS ============ */
 :root{
@@ -38,17 +39,53 @@ body.light-mode{
   --bg-alt: #EEF1F6;
   --panel: #FFFFFF;
   --panel-2: #F1F3F8;
-  --border: #DFE4ED;
+  --border: #D6DCE6;
   --text: #14181F;
-  --text-dim: #5B6472;
+  --text-dim: #4B5563;
+  --accent: #17A574;
+  --accent-dim: #0E7A57;
+  --danger: #E5483A;
+  --warn: #D97B06;
+  --safe: #17A574;
+  --neutral: #4C6BE0;
 }
 body.light-mode .hero-grid-bg{
   background-image:
-    linear-gradient(rgba(27,158,110,0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(27,158,110,0.08) 1px, transparent 1px);
+    linear-gradient(rgba(23,165,116,0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23,165,116,0.10) 1px, transparent 1px);
 }
-body.light-mode .btn-primary{ color:#052015; }
-body.light-mode .topbar{ background: rgba(245,247,250,0.85); }
+body.light-mode .btn-primary{ color:#FFFFFF; }
+body.light-mode .btn-primary:hover{ background:#149268; }
+body.light-mode .topbar{ background: rgba(245,247,250,0.9); box-shadow:0 1px 0 rgba(0,0,0,0.04); }
+body.light-mode .sidebar{ box-shadow:2px 0 16px rgba(0,0,0,0.06); }
+body.light-mode .hat-card,
+body.light-mode .attack-item,
+body.light-mode .prevent-card,
+body.light-mode .glossary-item,
+body.light-mode .kc-content,
+body.light-mode .quiz-card,
+body.light-mode .protect-item{
+  box-shadow: 0 1px 3px rgba(20,24,31,0.05);
+}
+body.light-mode .eyebrow{ background: rgba(23,165,116,0.08); border-color: rgba(23,165,116,0.3); }
+body.light-mode .tag-danger{ background:rgba(229,72,58,0.1); }
+body.light-mode .tag-safe{ background:rgba(23,165,116,0.1); }
+body.light-mode .tag-warn{ background:rgba(217,123,6,0.12); }
+body.light-mode .tag-neutral{ background:rgba(76,107,224,0.1); }
+body.light-mode .quiz-option{ background:var(--panel); }
+body.light-mode .quiz-option:hover{ background:#FAFBFD; }
+body.light-mode .attack-icon{ background:var(--panel-2); }
+body.light-mode .prevent-icon{ background:rgba(23,165,116,0.1); }
+body.light-mode .formateur-avatar{ color:#fff; }
+body.light-mode .logo-svg{ filter: drop-shadow(0 0 6px rgba(23,165,116,0.3)); }
+body.light-mode .hero-shield-big #shieldPath{ fill: rgba(23,165,116,0.05); }
+body.light-mode ::selection{ background: var(--accent); color:#fff; }
+body.light-mode .hat-scene-wrap svg [fill="#171d2d"],
+body.light-mode .attack-scene-wrap svg [fill="#171d2d"]{ fill:#EEF1F6; }
+body.light-mode .hat-scene-wrap svg [fill="#0B0E14"],
+body.light-mode .attack-scene-wrap svg [fill="#0B0E14"]{ fill:#FFFFFF; }
+body.light-mode .hat-scene-wrap svg [stroke="#2a3145"],
+body.light-mode .attack-scene-wrap svg [stroke="#2a3145"]{ stroke:#D6DCE6; }
 
 *{margin:0; padding:0; box-sizing:border-box;}
 body{
@@ -267,24 +304,60 @@ h1,h2,h3{font-family:var(--font-display); font-weight:600; letter-spacing:-0.01e
 .hat-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; }
 .hat-card{
   background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
-  padding:26px; transition: border-color .2s, transform .2s;
+  padding:22px; transition: border-color .2s, transform .2s;
 }
-.hat-card:hover{ transform:translateY(-4px); border-color:var(--accent); }
-.hat-icon{ width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; background:var(--panel-2); }
-.hat-black .hat-icon{ color:var(--danger); }
-.hat-white .hat-icon{ color:var(--safe); }
-.hat-grey .hat-icon{ color:var(--text-dim); }
-.hat-script .hat-icon{ color:var(--warn); }
-.hat-hacktiv .hat-icon{ color:var(--neutral); }
-.hat-state .hat-icon{ color:var(--danger); }
+.hat-card:hover{ transform:translateY(-4px); border-color:var(--hat-accent, var(--accent)); }
+
+.hat-scene-wrap{ width:100%; margin-bottom:6px; }
+.hat-scene-wrap svg{ width:100%; height:auto; display:block; }
 
 .hat-card h3{ font-size:1.1rem; margin-bottom:8px; }
-.hat-tag{ display:inline-block; font-family:var(--font-mono); font-size:0.65rem; text-transform:uppercase; letter-spacing:0.06em; padding:4px 9px; border-radius:999px; margin-bottom:12px; }
+.hat-tag{ display:inline-block; font-family:var(--font-mono); font-size:0.65rem; text-transform:uppercase; letter-spacing:0.06em; padding:4px 9px; border-radius:999px; margin-bottom:14px; }
 .tag-danger{ background:rgba(255,107,91,0.12); color:var(--danger); }
 .tag-safe{ background:rgba(61,220,151,0.12); color:var(--safe); }
 .tag-warn{ background:rgba(255,159,28,0.12); color:var(--warn); }
 .tag-neutral{ background:rgba(108,140,255,0.12); color:var(--neutral); }
-.hat-card p{ color:var(--text-dim); font-size:0.9rem; }
+
+.hat-card p{ color:var(--text-dim); font-size:0.85rem; margin-bottom:9px; line-height:1.55; }
+.hat-card p b{ color:var(--text); font-weight:600; }
+.hat-card p:last-child{ margin-bottom:0; }
+.hat-risk span{ color:var(--hat-accent, var(--text)); font-weight:600; }
+
+/* --- Hacker scene animations --- */
+.hacker-scene .eye-blink{ animation: eyeBlink 3.4s ease-in-out infinite; }
+@keyframes eyeBlink{ 0%,90%,100%{ opacity:1; transform:scaleY(1);} 95%{ opacity:1; transform:scaleY(0.1);} }
+
+.hacker-scene .code-rain rect{ animation: codeFall 2.6s linear infinite; }
+.hacker-scene .code-rain rect:nth-child(2){ animation-delay:.4s; }
+.hacker-scene .code-rain rect:nth-child(3){ animation-delay:.8s; }
+.hacker-scene .code-rain rect:nth-child(4){ animation-delay:1.2s; }
+@keyframes codeFall{ 0%{ opacity:0; transform:translateY(-6px);} 30%{opacity:.7;} 100%{ opacity:0; transform:translateY(10px);} }
+
+.hacker-scene .shield-draw{ stroke-dasharray:220; stroke-dashoffset:220; animation: shieldDraw 1.6s ease-out forwards; }
+@keyframes shieldDraw{ to{ stroke-dashoffset:0; } }
+.hacker-scene .check-draw{ stroke-dasharray:60; stroke-dashoffset:60; animation: shieldDraw 1s ease-out .6s forwards; }
+.hacker-scene .scan-ring circle{ animation: scanPulse 2.4s ease-in-out infinite; transform-origin:110px 70px; }
+@keyframes scanPulse{ 0%,100%{ opacity:.3; transform:scale(1);} 50%{ opacity:.7; transform:scale(1.08);} }
+
+.hacker-scene .tilt-icon{ animation: tiltSway 3s ease-in-out infinite; transform-origin:110px 70px; }
+@keyframes tiltSway{ 0%,100%{ transform:rotate(0deg);} 50%{ transform:rotate(4deg);} }
+
+.hacker-scene .terminal-blink rect{ animation: termBlink 1.8s ease-in-out infinite; }
+.hacker-scene .terminal-blink rect:nth-child(2){ animation-delay:.3s; }
+.hacker-scene .terminal-blink rect:nth-child(3){ animation-delay:.6s; }
+@keyframes termBlink{ 0%,100%{ opacity:1;} 50%{ opacity:.25;} }
+
+.hacker-scene .globe-spin{ animation: globeRotate 8s linear infinite; transform-origin:110px 65px; }
+@keyframes globeRotate{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
+
+.hacker-scene .node-pulse circle{ animation: nodePulse 2s ease-in-out infinite; }
+.hacker-scene .node-pulse circle:nth-child(2){ animation-delay:.3s; }
+.hacker-scene .node-pulse circle:nth-child(3){ animation-delay:.6s; }
+@keyframes nodePulse{ 0%,100%{ opacity:.6; r:4;} 50%{ opacity:1; r:5;} }
+
+@media (prefers-reduced-motion: reduce){
+  .hacker-scene *, .attack-scene *{ animation:none !important; }
+}
 
 /* ============ MODULE 2: ATTACK LIST ============ */
 .attack-list{ display:flex; flex-direction:column; gap:12px; }
@@ -303,7 +376,41 @@ h1,h2,h3{font-family:var(--font-display); font-weight:600; letter-spacing:-0.01e
 .attack-chevron{ color:var(--text-dim); transition: transform .2s; flex-shrink:0; }
 .attack-item[open] .attack-chevron{ transform:rotate(90deg); }
 .attack-body{ padding:0 24px 24px 78px; color:var(--text-dim); font-size:0.92rem; }
+.attack-body p{ margin-bottom:10px; line-height:1.6; }
+.attack-body p:last-child{ margin-bottom:0; }
 .attack-body b{ color:var(--text); font-weight:600; }
+
+.attack-scene-wrap{ max-width:220px; margin:4px 0 16px; }
+.attack-scene-wrap svg{ width:100%; height:auto; display:block; }
+
+/* --- Attack scene animations --- */
+.attack-scene .hook-swing{ animation: hookSwing 2.4s ease-in-out infinite; transform-origin:150px 20px; }
+@keyframes hookSwing{ 0%,100%{ transform:rotate(0deg);} 50%{ transform:rotate(-6deg);} }
+.attack-scene .ping-dot{ animation: pingFade 1.6s ease-in-out infinite; }
+@keyframes pingFade{ 0%,100%{ opacity:.3;} 50%{ opacity:1;} }
+
+.attack-scene .lock-shackle{ animation: shackleDrop 2.2s ease-in-out infinite; transform-origin:100px 45px; }
+@keyframes shackleDrop{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(2px);} }
+.attack-scene .lock-flicker rect{ animation: termBlink 1.8s ease-in-out infinite; }
+
+.attack-scene .ddos-converge circle{ animation: converge 1.8s ease-in-out infinite; }
+@keyframes converge{ 0%,100%{ opacity:.4; r:4;} 50%{ opacity:1; r:5;} }
+
+.attack-scene .dash-flow{ stroke-dashoffset:0; animation: dashFlow 1.5s linear infinite; }
+@keyframes dashFlow{ to{ stroke-dashoffset:-16; } }
+.attack-scene .whisper-pulse{ animation: scanPulse 2s ease-in-out infinite; transform-origin:100px 46px; }
+
+.attack-scene .inject-drip{ animation: dripFall 1.8s ease-in infinite; }
+@keyframes dripFall{ 0%{ opacity:0; transform:translateY(-4px);} 30%{ opacity:1;} 100%{ opacity:0; transform:translateY(6px);} }
+
+.attack-scene .mitm-intercept{ animation: nodePulse 2s ease-in-out infinite; transform-origin:100px 65px; }
+
+.attack-scene .malware-x{ animation: pingFade 1.4s ease-in-out infinite; }
+.attack-scene .spread-dots circle{ animation: converge 2s ease-in-out infinite; }
+
+.attack-scene .key-cycle{ animation: keyRotate 2.4s ease-in-out infinite; transform-origin:100px 78px; }
+@keyframes keyRotate{ 0%,100%{ transform:rotate(0deg);} 50%{ transform:rotate(25deg);} }
+.attack-scene .attempt-dots rect{ animation: termBlink 1.6s ease-in-out infinite; }
 
 /* ============ MODULE 3: KILL CHAIN ============ */
 .kill-chain{ position:relative; display:flex; flex-direction:column; gap:0; }
@@ -353,6 +460,16 @@ h1,h2,h3{font-family:var(--font-display); font-weight:600; letter-spacing:-0.01e
 .protect-item p{ font-size:0.87rem; color:var(--text-dim); }
 .protect-item.checked p{ color:var(--text); }
 
+/* ============ MODULE 6: GLOSSARY ============ */
+.glossary-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:14px; }
+.glossary-item{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--radius-sm);
+  padding:18px 20px; transition: border-color .15s;
+}
+.glossary-item:hover{ border-color:var(--accent); }
+.glossary-term{ font-family:var(--font-mono); font-weight:600; color:var(--accent); font-size:0.92rem; margin-bottom:6px; }
+.glossary-def{ color:var(--text-dim); font-size:0.87rem; line-height:1.55; }
+
 /* ============ QUIZ ============ */
 .quiz-box{ max-width:720px; margin:0 auto; }
 .quiz-progress{ display:flex; gap:6px; margin-bottom:28px; }
@@ -389,7 +506,7 @@ h1,h2,h3{font-family:var(--font-display); font-weight:600; letter-spacing:-0.01e
 .footer-logo{ display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-weight:600; color:var(--text); }
 
 /* ============ RESPONSIVE ============ */
-@media (max-width: 900px){
+@media (max-width: 1100px){
   .hero{ grid-template-columns:1fr; padding:56px 22px 40px; text-align:left; }
   .hero-visual{ order:-1; margin-bottom:20px; }
   .hero-shield-big{ width:220px; }
@@ -399,21 +516,330 @@ h1,h2,h3{font-family:var(--font-display); font-weight:600; letter-spacing:-0.01e
   .prevent-grid{ grid-template-columns:1fr; }
   .protect-checklist{ grid-template-columns:1fr 1fr; }
   .attack-body{ padding-left:24px; }
+  .glossary-grid{ grid-template-columns:1fr; }
+  .incident-timeline{ grid-template-columns:1fr; }
+  .cert-form-grid{ grid-template-columns:1fr; }
+  .sim-choices{ flex-direction:column; }
 }
+
+@media (max-width: 768px){
+  .sidebar{ width:min(320px, 84vw); }
+  .hero-title{ font-size: clamp(2rem, 7vw, 2.8rem); }
+  .hero-desc{ max-width:100%; }
+  .hero-actions{ flex-direction:column; align-items:stretch; }
+  .hero-actions .btn{ justify-content:center; }
+  .module-head{ flex-direction:column; gap:10px; }
+  .module-index{ align-self:flex-start; }
+  .case-head{ flex-wrap:wrap; }
+  .kc-step{ grid-template-columns:40px 1fr; gap:14px; }
+  .kc-marker{ width:36px; height:36px; font-size:0.85rem; }
+  .kc-step:not(:last-child)::before{ left:18px; }
+  .sim-message-head{ flex-direction:column; align-items:flex-start; }
+  .quiz-card{ padding:22px 18px; }
+  .cert-gate{ padding:32px 20px; margin:24px auto; }
+  .site-footer{ padding:32px 20px; }
+}
+
 @media (max-width: 560px){
   .hat-grid{ grid-template-columns:1fr; }
   .protect-checklist{ grid-template-columns:1fr; }
   .topbar{ padding:12px 16px; }
   .logo-sub{ display:none; }
   .premium-label{ display:none; }
+  .sidebar{ width:100vw; }
+  .module{ padding:44px 16px; }
+  .module-alt > *{ padding-left:0; padding-right:0; }
+  .hero{ padding:44px 16px 32px; }
+  .hero-stats{ gap:18px; }
+  .stat-num{ font-size:1.5rem; }
+  .hat-card, .attack-item, .prevent-card, .glossary-item, .kc-content,
+  .quiz-card, .protect-item, .case-card, .incident-phase, .sim-message-card{
+    padding:16px;
+  }
+  .attack-summary{ padding:16px; gap:10px; }
+  .attack-body{ padding:0 16px 18px 16px; }
+  .attack-icon{ width:32px; height:32px; }
+  .attack-title{ font-size:0.92rem; }
+  .cert-template-list{ gap:8px; }
+  .cert-template-option{ padding:10px; }
+  .sim-hotspots li{ font-size:0.8rem; }
+  .quiz-options{ gap:8px; }
+  .quiz-option{ padding:12px 14px; font-size:0.88rem; }
+  .btn{ padding:12px 18px; font-size:0.88rem; }
+  .formateur-card{ gap:8px; }
 }
+
+@media (max-width: 380px){
+  .hero-title{ font-size:1.7rem; }
+  .eyebrow{ font-size:0.68rem; padding:5px 10px; }
+  .hero-stats{ flex-wrap:wrap; row-gap:10px; }
+  .module-index{ font-size:0.75rem; padding:5px 9px; }
+  .module-head h2{ font-size:1.3rem; }
+  .hat-scene-wrap svg, .attack-scene-wrap svg{ max-width:100%; }
+  .quiz-result-score, .sim-result-score{ font-size:2.2rem; }
+  .cert-unlocked-badge{ font-size:0.7rem; padding:6px 12px; }
+  .logo-title{ font-size:1rem; }
+}
+
+@media (min-width: 1600px){
+  .module{ max-width:1400px; }
+  .module-alt > *{ max-width:1400px; }
+}
+
 
 /* focus visibility */
 a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
 
+/* ============ ICON ANIMATIONS (site-wide) ============ */
+
+/* Header logo shield — pulse + periodic scan sweep */
+.logo-svg{ animation: logoPulse 3.2s ease-in-out infinite; transform-origin:center; }
+@keyframes logoPulse{
+  0%,100%{ filter: drop-shadow(0 0 8px rgba(61,220,151,0.25)); transform:scale(1) rotate(0deg); }
+  50%{ filter: drop-shadow(0 0 14px rgba(61,220,151,0.5)); transform:scale(1.06) rotate(-3deg); }
+}
+body.light-mode .logo-svg{ animation: logoPulseLight 3.2s ease-in-out infinite; }
+@keyframes logoPulseLight{
+  0%,100%{ filter: drop-shadow(0 0 5px rgba(23,165,116,0.3)); transform:scale(1) rotate(0deg); }
+  50%{ filter: drop-shadow(0 0 10px rgba(23,165,116,0.55)); transform:scale(1.06) rotate(-3deg); }
+}
+.logo-mini svg{ animation: logoPulse 3.2s ease-in-out infinite; }
+
+/* Sidebar nav icons — swap in a tiny bounce/draw on hover, subtle idle motion on active */
+.sidebar-nav a svg{ transition: transform .25s ease; }
+.sidebar-nav a:hover svg{ transform: scale(1.15) rotate(-4deg); }
+.sidebar-nav a.active svg{ animation: navIconBreathe 2.4s ease-in-out infinite; }
+@keyframes navIconBreathe{ 0%,100%{ opacity:1;} 50%{ opacity:.6;} }
+
+/* Icon buttons (menu / close) — rotate slightly on hover */
+.icon-btn svg{ transition: transform .2s ease; }
+.icon-btn:hover svg{ transform: rotate(90deg); }
+#closeSidebar:hover svg{ transform: rotate(90deg); }
+
+/* Hero CTA arrow — nudge on hover */
+.btn svg{ transition: transform .2s ease; }
+.btn:hover svg{ transform: translateX(3px); }
+
+/* Eyebrow dot already pulses via .eyebrow-dot; keep as is */
+
+/* Attack accordion icons — idle micro-pulse, wake up on open */
+.attack-icon svg{ animation: iconIdlePulse 3.6s ease-in-out infinite; }
+@keyframes iconIdlePulse{ 0%,100%{ opacity:.85; transform:scale(1);} 50%{ opacity:1; transform:scale(1.08);} }
+.attack-item[open] .attack-icon svg{ animation: iconWake .5s ease; }
+@keyframes iconWake{ 0%{ transform:scale(1);} 40%{ transform:scale(1.25) rotate(-6deg);} 100%{ transform:scale(1);} }
+.attack-chevron{ transition: transform .25s ease; }
+
+/* Prevention module icons — rotate/scan on hover, idle sway */
+.prevent-icon svg{ animation: preventSway 4s ease-in-out infinite; transform-origin:center; }
+@keyframes preventSway{ 0%,100%{ transform:rotate(0deg);} 50%{ transform:rotate(-5deg);} }
+.prevent-card:hover .prevent-icon svg{ animation: preventSpin .6s ease; }
+@keyframes preventSpin{ from{ transform:rotate(0deg) scale(1);} to{ transform:rotate(360deg) scale(1.1);} }
+
+/* Checklist checkmark — pop-in animation when checked */
+.protect-check svg{ transition: opacity .15s ease, transform .25s cubic-bezier(.34,1.56,.64,1); transform: scale(0.5); }
+.protect-item.checked .protect-check svg{ transform: scale(1); }
+.protect-item:not(.checked):hover .protect-check{ animation: checkHint 1.4s ease-in-out infinite; }
+@keyframes checkHint{ 0%,100%{ border-color:var(--border);} 50%{ border-color:var(--accent);} }
+
+/* Glossary — small pulsing dot marker before each term, animated in via JS-added span not required;
+   instead animate the term color on hover */
+.glossary-item{ position:relative; overflow:hidden; }
+.glossary-item::before{
+  content:''; position:absolute; top:0; left:0; width:3px; height:100%;
+  background:var(--accent); transform:scaleY(0); transform-origin:top;
+  transition: transform .3s ease;
+}
+.glossary-item:hover::before{ transform:scaleY(1); }
+
+/* Kill chain markers — pulse ring on each step, staggered */
+.kc-marker{ position:relative; }
+.kc-marker::after{
+  content:''; position:absolute; inset:-4px; border-radius:50%;
+  border:1px solid var(--accent); opacity:0; animation: kcRing 2.6s ease-out infinite;
+}
+.kc-step:nth-child(1) .kc-marker::after{ animation-delay:0s; }
+.kc-step:nth-child(2) .kc-marker::after{ animation-delay:.3s; }
+.kc-step:nth-child(3) .kc-marker::after{ animation-delay:.6s; }
+.kc-step:nth-child(4) .kc-marker::after{ animation-delay:.9s; }
+.kc-step:nth-child(5) .kc-marker::after{ animation-delay:1.2s; }
+.kc-step:nth-child(6) .kc-marker::after{ animation-delay:1.5s; }
+.kc-step:nth-child(7) .kc-marker::after{ animation-delay:1.8s; }
+@keyframes kcRing{
+  0%{ transform:scale(1); opacity:.5; }
+  100%{ transform:scale(1.6); opacity:0; }
+}
+
+/* Theme toggle sun/moon icon — rotate on switch */
+#themeIcon{ transition: transform .4s ease; }
+.theme-toggle[aria-pressed="true"] #themeIcon{ transform: rotate(180deg); }
+
+/* Formateur avatar — subtle idle glow */
+.formateur-avatar{ animation: avatarGlow 4s ease-in-out infinite; }
+@keyframes avatarGlow{
+  0%,100%{ box-shadow:0 0 0 rgba(61,220,151,0); }
+  50%{ box-shadow:0 0 12px rgba(61,220,151,0.35); }
+}
+
+/* Hat card icons (module 1 scenes) already animate individually — add idle float to whole scene */
+.hat-scene-wrap svg{ animation: sceneFloat 4.5s ease-in-out infinite; }
+@keyframes sceneFloat{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-4px);} }
+
+.attack-scene-wrap svg{ animation: sceneFloat 4.5s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce){
+  .logo-svg, .logo-mini svg, .sidebar-nav a.active svg, .attack-icon svg, .prevent-icon svg,
+  .kc-marker::after, .formateur-avatar, .hat-scene-wrap svg, .attack-scene-wrap svg{
+    animation: none !important;
+  }
+}
+
+/* ============ SIDEBAR PROGRESS ============ */
+.sidebar-progress{ padding:14px 18px 6px; }
+.sidebar-progress-head{
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:var(--font-mono); font-size:0.68rem; color:var(--text-dim);
+  text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;
+}
+#progressPct{ color:var(--accent); font-weight:600; }
+.progress-track{ height:5px; border-radius:999px; background:var(--panel-2); overflow:hidden; }
+.progress-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--neutral)); border-radius:999px; transition: width .4s ease; }
+
+/* ============ MODULE 7: CASE STUDIES ============ */
+.case-list{ display:flex; flex-direction:column; gap:18px; }
+.case-card{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+  padding:26px;
+}
+.case-head{ display:flex; gap:14px; align-items:center; margin-bottom:18px; }
+.case-icon{
+  width:46px; height:46px; border-radius:12px; background:var(--panel-2);
+  display:flex; align-items:center; justify-content:center; color:var(--warn); flex-shrink:0;
+}
+.case-head h3{ font-family:var(--font-display); font-size:1.08rem; margin-bottom:4px; }
+.case-tag{ font-family:var(--font-mono); font-size:0.68rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; }
+.case-block{ margin-bottom:14px; }
+.case-block:last-child{ margin-bottom:0; }
+.case-label{ display:block; font-family:var(--font-mono); font-size:0.68rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:5px; }
+.case-block p{ color:var(--text-dim); font-size:0.9rem; line-height:1.6; }
+.case-lesson{ background:rgba(61,220,151,0.06); border-left:2px solid var(--accent); padding:12px 14px; border-radius:0 8px 8px 0; }
+.case-lesson .case-label{ color:var(--accent); }
+.case-lesson p{ color:var(--text); }
+
+/* ============ MODULE 8: PHISHING SIMULATOR ============ */
+.sim-wrap{ max-width:640px; margin:0 auto; }
+.sim-progress-label{ font-family:var(--font-mono); font-size:0.75rem; color:var(--text-dim); margin-bottom:14px; text-align:center; }
+.sim-message-card{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+  padding:22px; margin-bottom:20px;
+}
+.sim-message-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px; }
+.sim-type-badge{ font-family:var(--font-mono); font-size:0.72rem; background:var(--panel-2); padding:4px 10px; border-radius:999px; color:var(--text-dim); }
+.sim-from{ font-family:var(--font-mono); font-size:0.8rem; color:var(--text-dim); }
+.sim-subject{ font-weight:600; font-size:1.02rem; margin-bottom:10px; }
+.sim-preview{ color:var(--text-dim); font-size:0.9rem; line-height:1.6; }
+.sim-choices{ display:flex; gap:12px; margin-bottom:18px; }
+.sim-choice{ flex:1; }
+.sim-choice.correct{ border-color:var(--safe); background:rgba(61,220,151,0.1); color:var(--safe); }
+.sim-choice.wrong{ border-color:var(--danger); background:rgba(255,107,91,0.1); color:var(--danger); }
+.sim-feedback{ display:none; padding:16px 18px; border-radius:var(--radius-sm); background:var(--panel); border:1px solid var(--border); font-size:0.88rem; }
+.sim-feedback.show{ display:block; }
+.sim-feedback p{ margin-bottom:10px; color:var(--text); }
+.sim-hotspots{ list-style:none; display:flex; flex-direction:column; gap:6px; }
+.sim-hotspots li{ color:var(--text-dim); font-size:0.85rem; padding-left:14px; position:relative; }
+.sim-hotspots li::before{ content:'—'; position:absolute; left:0; color:var(--warn); }
+.sim-hotspots li b{ color:var(--text); }
+.sim-next{ margin-top:18px; text-align:center; }
+.sim-result{ text-align:center; padding:40px 20px; }
+.sim-result-score{ font-family:var(--font-display); font-size:3rem; color:var(--accent); font-weight:700; }
+.sim-result p{ color:var(--text-dim); margin:10px 0 22px; }
+
+/* ============ MODULE 9: INCIDENT PLAN ============ */
+.incident-timeline{ display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+.incident-phase{ background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:22px; }
+.incident-phase-head{ display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.incident-icon{ width:40px; height:40px; border-radius:10px; background:rgba(255,159,28,0.1); color:var(--warn); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.incident-phase-head h3{ font-family:var(--font-display); font-size:1rem; }
+.incident-actions{ list-style:none; display:flex; flex-direction:column; gap:10px; }
+.incident-actions li{ color:var(--text-dim); font-size:0.87rem; line-height:1.55; padding-left:18px; position:relative; }
+.incident-actions li::before{ content:''; position:absolute; left:0; top:7px; width:6px; height:6px; border-radius:50%; background:var(--accent); }
+
+/* ============ CERTIFICATE MODULE ============ */
+.cert-gate{
+  max-width:480px; margin:40px auto; text-align:center;
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+  padding:44px 32px;
+}
+.cert-gate-icon{
+  width:64px; height:64px; border-radius:16px; background:rgba(255,159,28,0.1); color:var(--warn);
+  display:flex; align-items:center; justify-content:center; margin:0 auto 20px;
+}
+.cert-gate h3{ font-family:var(--font-display); font-size:1.2rem; margin-bottom:10px; }
+.cert-gate p{ color:var(--text-dim); font-size:0.9rem; margin-bottom:24px; }
+
+.cert-unlocked-badge{
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(61,220,151,0.1); color:var(--accent);
+  font-family:var(--font-mono); font-size:0.78rem;
+  padding:8px 16px; border-radius:999px; margin-bottom:26px;
+}
+
+.cert-form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
+.cert-step-title{ font-family:var(--font-display); font-size:1rem; margin-bottom:14px; }
+.cert-label{ display:block; font-size:0.82rem; color:var(--text-dim); margin-bottom:6px; margin-top:14px; }
+.cert-label:first-of-type{ margin-top:0; }
+.cert-input{
+  width:100%; padding:11px 14px; border-radius:var(--radius-sm);
+  background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+  font-family:var(--font-body); font-size:0.92rem;
+}
+.cert-input:focus{ outline:none; border-color:var(--accent); }
+
+.cert-template-list{ display:flex; flex-direction:column; gap:10px; }
+.cert-template-option{
+  display:flex; align-items:center; gap:12px; text-align:left;
+  padding:12px 14px; border-radius:var(--radius-sm);
+  background:var(--panel-2); border:1px solid var(--border); cursor:pointer;
+  transition: border-color .15s;
+}
+.cert-template-option:hover{ border-color:var(--accent); }
+.cert-template-option.selected{ border-color:var(--accent); background:rgba(61,220,151,0.06); }
+.cert-template-swatch{ width:32px; height:32px; border-radius:8px; flex-shrink:0; border:1px solid var(--border); }
+.swatch-classic{ background:linear-gradient(135deg,#fff,#3DDC97); }
+.swatch-dark{ background:linear-gradient(135deg,#0B0E14,#3DDC97); }
+.swatch-gold{ background:linear-gradient(135deg,#FBF7EE,#C9A24B); }
+.cert-template-name{ display:block; font-weight:600; font-size:0.88rem; }
+.cert-template-desc{ display:block; font-size:0.76rem; color:var(--text-dim); margin-top:2px; }
+
+.cert-preview-col{ display:flex; flex-direction:column; }
+.cert-preview-frame{
+  border-radius:var(--radius); overflow:hidden; border:1px solid var(--border);
+  margin-bottom:16px; box-shadow:0 4px 20px rgba(0,0,0,0.12);
+}
+.cert-svg{ width:100%; height:auto; display:block; transition:opacity .2s; }
+.cert-download-btn{ width:100%; justify-content:center; }
+.cert-download-btn:disabled{ opacity:0.5; cursor:not-allowed; transform:none; }
+
+/* ============ SIGNATURE PAD ============ */
+.cert-sign-hint{ font-size:0.8rem; color:var(--text-dim); margin-bottom:10px; }
+.cert-sign-pad-wrap{
+  position:relative; border-radius:var(--radius-sm); overflow:hidden;
+  border:1px dashed var(--border); background:var(--panel-2);
+}
+.cert-sign-pad{
+  display:block; width:100%; height:150px; touch-action:none; cursor:crosshair;
+  background:transparent;
+}
+.cert-sign-placeholder{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  color:var(--text-dim); font-family:var(--font-mono); font-size:0.8rem;
+  pointer-events:none; opacity:0.5;
+}
+.cert-sign-actions{ margin-top:10px; display:flex; justify-content:flex-end; }
+.cert-sign-clear{ padding:8px 14px; font-size:0.8rem; }
+
 </style>
 </head>
-<body>
+<body class="light-mode">
 
 <!-- Scan overlay for load animation -->
 <div class="scan-overlay" id="scanOverlay"></div>
@@ -430,6 +856,14 @@ a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-
     <button class="icon-btn" id="closeSidebar" aria-label="Fermer le menu">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
+  </div>
+
+  <div class="sidebar-progress">
+    <div class="sidebar-progress-head">
+      <span>Progression</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
   </div>
 
   <div class="sidebar-section-label">Programme</div>
@@ -458,9 +892,37 @@ a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/><circle cx="12" cy="15" r="1.5"/></svg>
       05 — Se protéger
     </a></li>
+    <li><a href="#module-6" class="nav-link" data-target="module-6">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      06 — Glossaire
+    </a></li>
+  </ul>
+
+  <div class="sidebar-section-label">Mise en pratique</div>
+  <ul class="sidebar-nav">
+    <li><a href="#module-7" class="nav-link" data-target="module-7">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M9 7h6M9 11h6"/></svg>
+      07 — Cas réels
+    </a></li>
+    <li><a href="#module-8" class="nav-link" data-target="module-8">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+      08 — Simulateur phishing
+    </a></li>
+    <li><a href="#module-9" class="nav-link" data-target="module-9">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+      09 — Plan d'incident
+    </a></li>
     <li><a href="#quiz" class="nav-link" data-target="quiz">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 .3c0 1.7-2.5 1.7-2.5 3.7"/><circle cx="12" cy="17" r="0.3" fill="currentColor"/></svg>
       Quiz final
+    </a></li>
+  </ul>
+
+  <div class="sidebar-section-label">Certification</div>
+  <ul class="sidebar-nav">
+    <li><a href="#certificate" class="nav-link" data-target="certificate">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="6"/><path d="M8.5 13.5L6 22l6-3 6 3-2.5-8.5"/></svg>
+      Mon attestation
     </a></li>
   </ul>
 
@@ -547,61 +1009,7 @@ a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-
       </div>
     </div>
 
-    <div class="hat-grid">
-      <article class="hat-card hat-black">
-        <div class="hat-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4l16 16M4 20L20 4"/><circle cx="12" cy="12" r="9"/></svg>
-        </div>
-        <h3>Black Hat</h3>
-        <span class="hat-tag tag-danger">Malveillant</span>
-        <p>Agit sans autorisation, pour le profit, le sabotage ou par pure malveillance. Vole des données, extorque, détruit des systèmes.</p>
-      </article>
-
-      <article class="hat-card hat-white">
-        <div class="hat-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
-        </div>
-        <h3>White Hat</h3>
-        <span class="hat-tag tag-safe">Éthique</span>
-        <p>Hacker éthique, mandaté légalement pour trouver des failles avant les attaquants (pentesting, bug bounty).</p>
-      </article>
-
-      <article class="hat-card hat-grey">
-        <div class="hat-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 000 18z" fill="currentColor" stroke="none" opacity="0.3"/></svg>
-        </div>
-        <h3>Grey Hat</h3>
-        <span class="hat-tag tag-warn">Ambigu</span>
-        <p>Explore des systèmes sans autorisation mais sans intention nuisible, révèle parfois la faille après coup — reste illégal.</p>
-      </article>
-
-      <article class="hat-card hat-script">
-        <div class="hat-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        </div>
-        <h3>Script Kiddie</h3>
-        <span class="hat-tag tag-warn">Débutant</span>
-        <p>Utilise des outils et scripts créés par d'autres, sans réelle expertise technique — imprévisible et parfois dangereux.</p>
-      </article>
-
-      <article class="hat-card hat-hacktiv">
-        <div class="hat-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg>
-        </div>
-        <h3>Hacktiviste</h3>
-        <span class="hat-tag tag-neutral">Militant</span>
-        <p>Pirate pour une cause politique, sociale ou idéologique. Défacement de sites, fuites de données pour dénoncer.</p>
-      </article>
-
-      <article class="hat-card hat-state">
-        <div class="hat-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/></svg>
-        </div>
-        <h3>Acteur étatique</h3>
-        <span class="hat-tag tag-danger">Stratégique</span>
-        <p>Groupes soutenus par des États pour l'espionnage, le sabotage d'infrastructures ou la guerre informationnelle (APT).</p>
-      </article>
-    </div>
+    <div class="hat-grid" id="hackerGrid"><!-- injected by JS --></div>
   </section>
 
   <!-- MODULE 2 : TYPES DE PIRATAGE -->
@@ -654,8 +1062,56 @@ a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-
     <div class="protect-checklist" id="protectChecklist"><!-- injected by JS --></div>
   </section>
 
+  <!-- MODULE 7 : CAS RÉELS -->
+  <section class="module page" id="module-7">
+    <div class="module-head">
+      <span class="module-index">07</span>
+      <div>
+        <h2>Cas réels — Scénarios commentés</h2>
+        <p class="module-sub">Des situations types, racontées et analysées pour ancrer la théorie dans le concret.</p>
+      </div>
+    </div>
+    <div class="case-list" id="caseList"><!-- injected by JS --></div>
+  </section>
+
+  <!-- MODULE 8 : SIMULATEUR PHISHING -->
+  <section class="module module-alt page" id="module-8">
+    <div class="module-head">
+      <span class="module-index">08</span>
+      <div>
+        <h2>Simulateur — Repérez le phishing</h2>
+        <p class="module-sub">Analysez chaque message et décidez : légitime ou frauduleux ? Cliquez pour révéler les indices.</p>
+      </div>
+    </div>
+    <div class="sim-wrap" id="simWrap"><!-- injected by JS --></div>
+  </section>
+
+  <!-- MODULE 9 : PLAN DE RÉPONSE À INCIDENT -->
+  <section class="module page" id="module-9">
+    <div class="module-head">
+      <span class="module-index">09</span>
+      <div>
+        <h2>Plan de réponse à incident</h2>
+        <p class="module-sub">Les bons réflexes, minute par minute, si vous pensez être victime d'une attaque.</p>
+      </div>
+    </div>
+    <div class="incident-timeline" id="incidentTimeline"><!-- injected by JS --></div>
+  </section>
+
+  <!-- MODULE 6 : GLOSSAIRE -->
+  <section class="module module-alt page" id="module-6">
+    <div class="module-head">
+      <span class="module-index">06</span>
+      <div>
+        <h2>Glossaire</h2>
+        <p class="module-sub">Les termes essentiels à connaître pour parler cybersécurité avec assurance.</p>
+      </div>
+    </div>
+    <div class="glossary-grid" id="glossaryGrid"><!-- injected by JS --></div>
+  </section>
+
   <!-- QUIZ -->
-  <section class="module module-alt quiz-section page" id="quiz">
+  <section class="module quiz-section page" id="quiz">
     <div class="module-head">
       <span class="module-index">✓</span>
       <div>
@@ -664,6 +1120,20 @@ a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-
       </div>
     </div>
     <div class="quiz-box" id="quizBox"><!-- injected by JS --></div>
+  </section>
+
+  <!-- CERTIFICATE -->
+  <section class="module module-alt page" id="certificate">
+    <div class="module-head">
+      <span class="module-index">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M8.5 13.5L6 22l6-3 6 3-2.5-8.5"/></svg>
+      </span>
+      <div>
+        <h2>Votre attestation de formation</h2>
+        <p class="module-sub">Terminez le quiz avec un score suffisant pour débloquer votre attestation personnalisée.</p>
+      </div>
+    </div>
+    <div id="certificateWrap"><!-- injected by JS --></div>
   </section>
 
   <footer class="site-footer">
@@ -712,55 +1182,339 @@ a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-
 </svg>
 
 <script>
+// ============ SIGNATURE DU FORMATEUR (fixe, sur toutes les attestations) ============
+const TRAINER_SIGNATURE = "data:image/png;base64,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";
+
+
+// ============ MODULE 1 : TYPES DE HACKERS ============
+const HACKERS = [
+  {
+    id: "black",
+    title: "Black Hat",
+    tag: "Malveillant",
+    tagClass: "tag-danger",
+    accent: "#FF6B5B",
+    definition: "Un Black Hat est un individu qui s'introduit dans des systèmes informatiques sans autorisation, dans une intention nuisible : vol, sabotage, extorsion.",
+    motivation: "Profit financier direct, revente de données volées, ou simple volonté de nuire.",
+    exemple: "Infiltrer le réseau d'une entreprise pour en voler la base de données clients et la revendre.",
+    risque: "Élevé",
+    scene: `
+      <svg viewBox="0 0 220 160" class="hacker-scene">
+        <defs>
+          <radialGradient id="glowBlack" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#FF6B5B" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#FF6B5B" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="110" cy="70" r="70" fill="url(#glowBlack)"/>
+        <rect x="55" y="95" width="110" height="45" rx="8" fill="#171d2d" stroke="#2a3145"/>
+        <path d="M75 95V80a35 35 0 0170 0v15" fill="none" stroke="#FF6B5B" stroke-width="4" class="hoodie-line"/>
+        <circle cx="110" cy="72" r="22" fill="#0B0E14" stroke="#FF6B5B" stroke-width="2"/>
+        <circle cx="102" cy="70" r="2.4" fill="#FF6B5B" class="eye-blink"/>
+        <circle cx="118" cy="70" r="2.4" fill="#FF6B5B" class="eye-blink"/>
+        <g class="code-rain">
+          <rect x="30" y="20" width="3" height="14" fill="#FF6B5B" opacity="0.6"/>
+          <rect x="45" y="10" width="3" height="20" fill="#FF6B5B" opacity="0.4"/>
+          <rect x="175" y="15" width="3" height="18" fill="#FF6B5B" opacity="0.5"/>
+          <rect x="190" y="28" width="3" height="12" fill="#FF6B5B" opacity="0.35"/>
+        </g>
+        <rect x="88" y="118" width="44" height="14" rx="2" fill="#0B0E14" stroke="#FF6B5B" stroke-width="1.2"/>
+      </svg>`
+  },
+  {
+    id: "white",
+    title: "White Hat",
+    tag: "Éthique",
+    tagClass: "tag-safe",
+    accent: "#3DDC97",
+    definition: "Un White Hat est un expert en cybersécurité mandaté légalement pour rechercher des failles dans un système, afin de les corriger avant qu'un attaquant ne les exploite.",
+    motivation: "Renforcer la sécurité, respecter un cadre contractuel (pentest, audit, bug bounty).",
+    exemple: "Être payé par une entreprise pour tenter de s'introduire dans son système et lui remettre un rapport de failles.",
+    risque: "Aucun (activité légale et encadrée)",
+    scene: `
+      <svg viewBox="0 0 220 160" class="hacker-scene">
+        <defs>
+          <radialGradient id="glowWhite" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#3DDC97" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#3DDC97" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="110" cy="70" r="70" fill="url(#glowWhite)"/>
+        <path d="M110 25l32 11v22c0 24-14 38-32 46-18-8-32-22-32-46V36l32-11z" fill="#171d2d" stroke="#3DDC97" stroke-width="2" class="shield-draw"/>
+        <path d="M92 68l13 13 24-24" fill="none" stroke="#3DDC97" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="check-draw"/>
+        <g class="scan-ring">
+          <circle cx="110" cy="70" r="45" fill="none" stroke="#3DDC97" stroke-width="1" opacity="0.3"/>
+        </g>
+        <rect x="88" y="120" width="44" height="14" rx="2" fill="#0B0E14" stroke="#3DDC97" stroke-width="1.2"/>
+      </svg>`
+  },
+  {
+    id: "grey",
+    title: "Grey Hat",
+    tag: "Ambigu",
+    tagClass: "tag-warn",
+    accent: "#8B93A7",
+    definition: "Un Grey Hat explore des systèmes sans autorisation préalable, mais sans intention de nuire — souvent pour signaler la faille après coup. L'acte reste illégal malgré l'intention.",
+    motivation: "Curiosité technique, reconnaissance, parfois négociation d'une récompense après la découverte.",
+    exemple: "Découvrir une faille sur un site en le testant sans permission, puis contacter l'entreprise pour la signaler.",
+    risque: "Moyen (zone légale grise)",
+    scene: `
+      <svg viewBox="0 0 220 160" class="hacker-scene">
+        <defs>
+          <linearGradient id="glowGrey" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#3DDC97" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#FF6B5B" stop-opacity="0.15"/>
+          </linearGradient>
+        </defs>
+        <circle cx="110" cy="70" r="70" fill="url(#glowGrey)"/>
+        <circle cx="110" cy="72" r="24" fill="#171d2d" stroke="#8B93A7" stroke-width="2"/>
+        <path d="M110 48a24 24 0 010 48z" fill="#8B93A7" opacity="0.25"/>
+        <circle cx="102" cy="70" r="2.2" fill="#E8EAED"/>
+        <circle cx="118" cy="70" r="2.2" fill="#E8EAED"/>
+        <g class="tilt-icon">
+          <path d="M70 40q-8 8 0 16" fill="none" stroke="#8B93A7" stroke-width="2" opacity="0.6"/>
+          <path d="M150 40q8 8 0 16" fill="none" stroke="#8B93A7" stroke-width="2" opacity="0.6"/>
+        </g>
+        <rect x="88" y="118" width="44" height="14" rx="2" fill="#0B0E14" stroke="#8B93A7" stroke-width="1.2"/>
+      </svg>`
+  },
+  {
+    id: "script",
+    title: "Script Kiddie",
+    tag: "Débutant",
+    tagClass: "tag-warn",
+    accent: "#FF9F1C",
+    definition: "Un Script Kiddie utilise des outils et scripts d'attaque déjà créés par d'autres, sans en comprendre le fonctionnement technique profond.",
+    motivation: "Reconnaissance sociale, provocation, ou simple envie de tester des outils trouvés en ligne.",
+    exemple: "Lancer un outil de déni de service téléchargé en ligne contre un site, sans en maîtriser les mécanismes.",
+    risque: "Variable, mais imprévisible",
+    scene: `
+      <svg viewBox="0 0 220 160" class="hacker-scene">
+        <defs>
+          <radialGradient id="glowScript" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#FF9F1C" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#FF9F1C" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="110" cy="70" r="70" fill="url(#glowScript)"/>
+        <rect x="60" y="55" width="100" height="65" rx="6" fill="#171d2d" stroke="#FF9F1C" stroke-width="2"/>
+        <rect x="68" y="63" width="84" height="42" rx="2" fill="#0B0E14"/>
+        <g class="terminal-blink">
+          <rect x="76" y="70" width="30" height="4" fill="#FF9F1C"/>
+          <rect x="76" y="78" width="50" height="4" fill="#FF9F1C" opacity="0.6"/>
+          <rect x="76" y="86" width="20" height="4" fill="#FF9F1C" opacity="0.8"/>
+        </g>
+        <rect x="88" y="122" width="44" height="10" rx="2" fill="#0B0E14" stroke="#FF9F1C" stroke-width="1.2"/>
+      </svg>`
+  },
+  {
+    id: "hacktiv",
+    title: "Hacktiviste",
+    tag: "Militant",
+    tagClass: "tag-neutral",
+    accent: "#6C8CFF",
+    definition: "Un hacktiviste utilise le piratage comme moyen d'action politique, sociale ou idéologique, pour dénoncer ou faire pression publiquement.",
+    motivation: "Défendre une cause, dénoncer une injustice perçue, obtenir une visibilité médiatique.",
+    exemple: "Défacer la page d'accueil d'un site institutionnel pour y afficher un message revendicatif.",
+    risque: "Élevé (impact réputationnel fort)",
+    scene: `
+      <svg viewBox="0 0 220 160" class="hacker-scene">
+        <defs>
+          <radialGradient id="glowHact" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#6C8CFF" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#6C8CFF" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="110" cy="70" r="70" fill="url(#glowHact)"/>
+        <circle cx="110" cy="65" r="30" fill="none" stroke="#6C8CFF" stroke-width="2" class="globe-spin"/>
+        <path d="M80 65h60M110 35v60M88 45q22 20 44 0M88 85q22 -20 44 0" fill="none" stroke="#6C8CFF" stroke-width="1.4" opacity="0.6" class="globe-spin"/>
+        <rect x="88" y="120" width="44" height="14" rx="2" fill="#0B0E14" stroke="#6C8CFF" stroke-width="1.2"/>
+      </svg>`
+  },
+  {
+    id: "state",
+    title: "Acteur étatique",
+    tag: "Stratégique",
+    tagClass: "tag-danger",
+    accent: "#FF6B5B",
+    definition: "Un acteur étatique (ou groupe APT — Advanced Persistent Threat) est soutenu, financé ou dirigé par un État, avec des moyens techniques et humains considérables.",
+    motivation: "Espionnage économique ou militaire, sabotage d'infrastructures critiques, influence géopolitique.",
+    exemple: "Maintenir un accès discret et prolongé dans le réseau d'une agence gouvernementale pour en extraire des informations sensibles.",
+    risque: "Très élevé (ressources quasi illimitées)",
+    scene: `
+      <svg viewBox="0 0 220 160" class="hacker-scene">
+        <defs>
+          <radialGradient id="glowState" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#FF6B5B" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#FF6B5B" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="110" cy="70" r="70" fill="url(#glowState)"/>
+        <rect x="70" y="40" width="80" height="60" rx="4" fill="#171d2d" stroke="#FF6B5B" stroke-width="2"/>
+        <rect x="70" y="40" width="80" height="16" fill="#FF6B5B" opacity="0.15"/>
+        <g class="node-pulse">
+          <circle cx="90" cy="75" r="4" fill="#FF6B5B"/>
+          <circle cx="130" cy="75" r="4" fill="#FF6B5B"/>
+          <circle cx="110" cy="90" r="4" fill="#FF6B5B"/>
+          <path d="M90 75L130 75M90 75L110 90M130 75L110 90" stroke="#FF6B5B" stroke-width="1" opacity="0.5"/>
+        </g>
+        <rect x="88" y="122" width="44" height="10" rx="2" fill="#0B0E14" stroke="#FF6B5B" stroke-width="1.2"/>
+      </svg>`
+  },
+];
+
 // ============ MODULE 2 : TYPES DE PIRATAGE ============
 const ATTACKS = [
   {
     title: "Phishing (hameçonnage)",
     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>`,
-    lancement: "L'attaquant envoie un email, SMS ou message imitant une entité de confiance (banque, service, collègue) pour pousser la victime à cliquer un lien ou saisir des identifiants.",
-    fonctionnement: "Le lien mène vers un faux site quasi identique à l'original. Les identifiants saisis sont capturés et réutilisés par l'attaquant."
+    definition: "Technique frauduleuse consistant à se faire passer pour une entité de confiance (banque, service en ligne, collègue) afin d'obtenir des informations confidentielles.",
+    lancement: "L'attaquant envoie un email, SMS ou message imitant une entité de confiance, incitant à cliquer un lien ou saisir des identifiants.",
+    fonctionnement: "Le lien mène vers un faux site quasi identique à l'original. Les identifiants saisis sont capturés et réutilisés par l'attaquant.",
+    signes: "Fautes d'orthographe, urgence excessive, adresse d'expéditeur légèrement différente, lien qui ne correspond pas au site officiel.",
+    impact: "Vol d'identifiants, accès non autorisé à des comptes bancaires ou professionnels, usurpation d'identité.",
+    scene: `<svg viewBox="0 0 200 130" class="attack-scene">
+      <rect x="20" y="30" width="90" height="60" rx="6" fill="#171d2d" stroke="#2a3145"/>
+      <path d="M20 36l45 30 45-30" fill="none" stroke="#FF9F1C" stroke-width="2"/>
+      <g class="hook-swing">
+        <path d="M150 20v40q0 14 -14 14" fill="none" stroke="#FF9F1C" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="136" cy="74" r="5" fill="none" stroke="#FF9F1C" stroke-width="3"/>
+      </g>
+      <circle cx="65" cy="60" r="3" fill="#FF9F1C" class="ping-dot"/>
+    </svg>`
   },
   {
     title: "Ransomware (rançongiciel)",
     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>`,
+    definition: "Logiciel malveillant qui chiffre les fichiers d'une victime et exige le paiement d'une rançon en échange de la clé de déchiffrement.",
     lancement: "Souvent via une pièce jointe piégée, un lien malveillant ou une faille non corrigée exploitée à distance.",
-    fonctionnement: "Le logiciel chiffre les fichiers de la victime, les rendant inaccessibles, puis affiche une demande de rançon pour fournir la clé de déchiffrement."
+    fonctionnement: "Le logiciel chiffre les fichiers de la victime, les rendant inaccessibles, puis affiche une demande de rançon.",
+    signes: "Fichiers soudainement illisibles ou renommés, message de rançon à l'écran, ralentissement système inhabituel.",
+    impact: "Perte d'accès aux données critiques, interruption d'activité, coût financier de la rançon ou de la restauration.",
+    scene: `<svg viewBox="0 0 200 130" class="attack-scene">
+      <rect x="65" y="45" width="70" height="55" rx="8" fill="#171d2d" stroke="#FF6B5B" stroke-width="2"/>
+      <path d="M80 45V32a20 20 0 0140 0v13" fill="none" stroke="#FF6B5B" stroke-width="4" class="lock-shackle"/>
+      <circle cx="100" cy="70" r="7" fill="#FF6B5B" opacity="0.8"/>
+      <rect x="97" y="72" width="6" height="12" fill="#FF6B5B" opacity="0.8"/>
+      <g class="lock-flicker">
+        <rect x="35" y="55" width="16" height="4" fill="#FF6B5B" opacity="0.5"/>
+        <rect x="150" y="70" width="16" height="4" fill="#FF6B5B" opacity="0.5"/>
+      </g>
+    </svg>`
   },
   {
     title: "Attaque par déni de service (DDoS)",
     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M9.5 9.5L6.5 6.5M14.5 9.5l3-3M9.5 14.5l-3 3M14.5 14.5l3 3"/></svg>`,
+    definition: "Attaque visant à rendre un service indisponible en le submergeant d'un volume anormal de requêtes provenant souvent de milliers d'appareils.",
     lancement: "Un réseau d'appareils infectés (botnet) est commandé à distance pour envoyer un volume massif de requêtes simultanées.",
-    fonctionnement: "Le serveur ciblé est saturé et ne peut plus répondre aux utilisateurs légitimes, rendant le service indisponible."
+    fonctionnement: "Le serveur ciblé est saturé et ne peut plus répondre aux utilisateurs légitimes, rendant le service indisponible.",
+    signes: "Site ou service anormalement lent puis inaccessible, pic soudain de trafic sans raison apparente.",
+    impact: "Interruption de service, perte de revenus, atteinte à la réputation, coûts de remédiation.",
+    scene: `<svg viewBox="0 0 200 130" class="attack-scene">
+      <circle cx="100" cy="65" r="16" fill="#171d2d" stroke="#FF9F1C" stroke-width="2"/>
+      <g class="ddos-converge">
+        <circle cx="30" cy="25" r="4" fill="#FF9F1C"/>
+        <circle cx="170" cy="25" r="4" fill="#FF9F1C"/>
+        <circle cx="30" cy="105" r="4" fill="#FF9F1C"/>
+        <circle cx="170" cy="105" r="4" fill="#FF9F1C"/>
+        <circle cx="100" cy="15" r="4" fill="#FF9F1C"/>
+        <path d="M30 25L90 58M170 25L110 58M30 105L90 72M170 105L110 72M100 15L100 50" stroke="#FF9F1C" stroke-width="1" opacity="0.45"/>
+      </g>
+    </svg>`
   },
   {
     title: "Ingénierie sociale",
     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 016-6h0a6 6 0 016 6v1"/><circle cx="18" cy="8" r="2.4"/><path d="M16 20v-1a4 4 0 014-4"/></svg>`,
-    lancement: "L'attaquant manipule psychologiquement la victime — urgence, autorité feinte, sympathie — au téléphone, en personne ou en ligne.",
-    fonctionnement: "La victime, mise en confiance ou sous pression, divulgue des informations sensibles ou effectue une action (virement, accès) sans vérifier."
+    definition: "Ensemble de techniques de manipulation psychologique visant à pousser une personne à divulguer des informations ou effectuer une action compromettante.",
+    lancement: "L'attaquant manipule la victime — urgence, autorité feinte, sympathie — au téléphone, en personne ou en ligne.",
+    fonctionnement: "La victime, mise en confiance ou sous pression, divulgue des informations sensibles ou effectue une action sans vérifier.",
+    signes: "Sentiment d'urgence artificiel, demande inhabituelle venant d'une 'autorité', pression pour contourner une procédure normale.",
+    impact: "Divulgation d'informations confidentielles, virements frauduleux, accès physique ou numérique non autorisé.",
+    scene: `<svg viewBox="0 0 200 130" class="attack-scene">
+      <circle cx="60" cy="55" r="18" fill="#171d2d" stroke="#6C8CFF" stroke-width="2"/>
+      <circle cx="140" cy="55" r="18" fill="#171d2d" stroke="#8B93A7" stroke-width="2"/>
+      <path d="M78 55h44" stroke="#6C8CFF" stroke-width="2" stroke-dasharray="4 4" class="dash-flow"/>
+      <path d="M100 40q6 6 0 12" fill="none" stroke="#6C8CFF" stroke-width="2" class="whisper-pulse"/>
+      <rect x="45" y="90" width="30" height="8" rx="4" fill="#171d2d" stroke="#6C8CFF"/>
+      <rect x="125" y="90" width="30" height="8" rx="4" fill="#171d2d" stroke="#8B93A7"/>
+    </svg>`
   },
   {
     title: "Injection SQL",
     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>`,
+    definition: "Technique consistant à insérer du code malveillant dans un champ de saisie mal sécurisé pour manipuler directement une base de données.",
     lancement: "L'attaquant insère du code malveillant dans un champ de saisie (formulaire, barre de recherche) d'un site mal sécurisé.",
-    fonctionnement: "La base de données interprète ce code comme une commande légitime, exposant, modifiant ou supprimant des données normalement protégées."
+    fonctionnement: "La base de données interprète ce code comme une commande légitime, exposant, modifiant ou supprimant des données.",
+    signes: "Difficile à repérer côté utilisateur — c'est une faille de conception détectable surtout par des tests de sécurité.",
+    impact: "Fuite massive de données (utilisateurs, mots de passe), altération ou suppression de bases de données entières.",
+    scene: `<svg viewBox="0 0 200 130" class="attack-scene">
+      <ellipse cx="100" cy="30" rx="46" ry="14" fill="#171d2d" stroke="#FF6B5B" stroke-width="2"/>
+      <path d="M54 30v55c0 8 20 14 46 14s46-6 46-14V30" fill="#171d2d" stroke="#FF6B5B" stroke-width="2"/>
+      <path d="M54 55c0 8 20 14 46 14s46-6 46-14" fill="none" stroke="#FF6B5B" stroke-width="1.4" opacity="0.5"/>
+      <g class="inject-drip">
+        <path d="M100 8v16" stroke="#FF6B5B" stroke-width="3"/>
+        <circle cx="100" cy="26" r="2.5" fill="#FF6B5B"/>
+      </g>
+    </svg>`
   },
   {
     title: "Attaque de l'homme du milieu (MITM)",
     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="12" r="2.5"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M7.5 12h2.5M14 12h2.5"/></svg>`,
+    definition: "Attaque où l'attaquant s'interpose secrètement entre deux parties en communication, pouvant lire ou modifier les échanges à leur insu.",
     lancement: "L'attaquant s'insère dans une communication, souvent via un réseau Wi-Fi public non sécurisé ou compromis.",
-    fonctionnement: "Il intercepte, lit voire modifie les échanges entre deux parties qui pensent communiquer directement l'une avec l'autre."
+    fonctionnement: "Il intercepte, lit voire modifie les échanges entre deux parties qui pensent communiquer directement l'une avec l'autre.",
+    signes: "Certificats de sécurité invalides, avertissements de connexion non sécurisée, ralentissements suspects sur un réseau public.",
+    impact: "Interception de mots de passe, données bancaires ou messages confidentiels, modification de transactions.",
+    scene: `<svg viewBox="0 0 200 130" class="attack-scene">
+      <circle cx="35" cy="65" r="14" fill="#171d2d" stroke="#3DDC97" stroke-width="2"/>
+      <circle cx="165" cy="65" r="14" fill="#171d2d" stroke="#3DDC97" stroke-width="2"/>
+      <path d="M49 65h102" stroke="#3DDC97" stroke-width="1.4" opacity="0.4" stroke-dasharray="4 4"/>
+      <g class="mitm-intercept">
+        <circle cx="100" cy="65" r="16" fill="#171d2d" stroke="#FF6B5B" stroke-width="2"/>
+        <path d="M93 65l5 5 9-11" fill="none" stroke="#FF6B5B" stroke-width="2.4" stroke-linecap="round"/>
+      </g>
+    </svg>`
   },
   {
     title: "Malware / logiciels malveillants",
     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9l6 6M15 9l-6 6"/></svg>`,
+    definition: "Terme générique désignant tout logiciel conçu pour endommager, espionner ou prendre le contrôle d'un système sans le consentement de l'utilisateur.",
     lancement: "Installation via téléchargement piégé, clé USB infectée, pièce jointe ou faille logicielle non corrigée.",
-    fonctionnement: "Selon le type (virus, cheval de Troie, spyware), le logiciel s'exécute discrètement pour voler des données, espionner ou endommager le système."
+    fonctionnement: "Selon le type (virus, cheval de Troie, spyware), le logiciel s'exécute discrètement pour voler des données, espionner ou endommager le système.",
+    signes: "Ralentissement inhabituel, programmes inconnus, pop-ups intempestifs, activité réseau suspecte.",
+    impact: "Vol de données, espionnage prolongé, corruption ou perte de fichiers, prise de contrôle à distance.",
+    scene: `<svg viewBox="0 0 200 130" class="attack-scene">
+      <rect x="70" y="35" width="60" height="60" rx="8" fill="#171d2d" stroke="#FF6B5B" stroke-width="2"/>
+      <path d="M85 55l30 20M115 55l-30 20" stroke="#FF6B5B" stroke-width="2.5" class="malware-x"/>
+      <g class="spread-dots">
+        <circle cx="40" cy="30" r="3" fill="#FF6B5B" opacity="0.6"/>
+        <circle cx="160" cy="35" r="3" fill="#FF6B5B" opacity="0.5"/>
+        <circle cx="50" cy="100" r="3" fill="#FF6B5B" opacity="0.4"/>
+        <circle cx="155" cy="95" r="3" fill="#FF6B5B" opacity="0.6"/>
+      </g>
+    </svg>`
   },
   {
     title: "Attaque par force brute",
     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="10" width="12" height="10" rx="2"/><path d="M9 10V7a3 3 0 016 0v3"/></svg>`,
+    definition: "Méthode automatisée qui teste un très grand nombre de combinaisons de mots de passe jusqu'à trouver la bonne.",
     lancement: "Un logiciel automatisé teste systématiquement des combinaisons de mots de passe sur un compte ciblé.",
-    fonctionnement: "Avec suffisamment de temps et un mot de passe faible, l'outil finit par trouver la bonne combinaison et accède au compte."
+    fonctionnement: "Avec suffisamment de temps et un mot de passe faible, l'outil finit par trouver la bonne combinaison et accède au compte.",
+    signes: "Multiples tentatives de connexion échouées, alertes de connexion inhabituelle, verrouillage de compte.",
+    impact: "Accès non autorisé au compte, à ses données, ou point d'entrée vers d'autres systèmes liés.",
+    scene: `<svg viewBox="0 0 200 130" class="attack-scene">
+      <rect x="55" y="55" width="90" height="55" rx="8" fill="#171d2d" stroke="#FF9F1C" stroke-width="2"/>
+      <path d="M75 55V40a25 25 0 0150 0v15" fill="none" stroke="#FF9F1C" stroke-width="4"/>
+      <g class="key-cycle">
+        <circle cx="100" cy="78" r="7" fill="none" stroke="#FF9F1C" stroke-width="2.5"/>
+        <rect x="97" y="84" width="6" height="12" fill="#FF9F1C"/>
+      </g>
+      <g class="attempt-dots">
+        <rect x="30" y="20" width="10" height="4" fill="#FF9F1C" opacity="0.7"/>
+        <rect x="160" y="25" width="10" height="4" fill="#FF9F1C" opacity="0.5"/>
+        <rect x="35" y="105" width="10" height="4" fill="#FF9F1C" opacity="0.6"/>
+      </g>
+    </svg>`
   },
 ];
 
@@ -798,8 +1552,25 @@ const PROTECTIONS = [
   "Vérifier les demandes urgentes d'argent ou d'accès par un second canal",
 ];
 
+// ============ MODULE 6 : GLOSSAIRE ============
+const GLOSSARY = [
+  { term: "CVE", def: "Common Vulnerabilities and Exposures — identifiant public unique attribué à une faille de sécurité connue." },
+  { term: "Zero-day", def: "Faille de sécurité inconnue de l'éditeur du logiciel, exploitée avant qu'un correctif n'existe." },
+  { term: "Malware", def: "Terme générique pour tout logiciel conçu pour nuire à un système ou à son utilisateur." },
+  { term: "Backdoor (porte dérobée)", def: "Accès caché installé dans un système pour permettre d'y revenir sans passer par l'authentification normale." },
+  { term: "Botnet", def: "Réseau d'appareils infectés, contrôlés à distance à l'insu de leurs propriétaires, souvent utilisé pour des attaques DDoS." },
+  { term: "Firewall (pare-feu)", def: "Système qui filtre le trafic réseau entrant et sortant selon des règles de sécurité définies." },
+  { term: "VPN", def: "Réseau privé virtuel qui chiffre la connexion internet, rendant le trafic illisible pour un observateur externe." },
+  { term: "Phishing", def: "Technique de fraude visant à obtenir des informations confidentielles en usurpant l'identité d'un tiers de confiance." },
+  { term: "Chiffrement", def: "Transformation d'une donnée pour la rendre illisible sans une clé de déchiffrement appropriée." },
+  { term: "Exploit", def: "Programme ou technique qui tire parti d'une faille de sécurité pour obtenir un comportement non prévu." },
+  { term: "Ingénierie sociale", def: "Ensemble de techniques de manipulation psychologique visant à obtenir des informations ou actions d'une personne." },
+  { term: "Authentification à deux facteurs (2FA)", def: "Méthode de connexion nécessitant deux preuves d'identité distinctes (ex : mot de passe + code temporaire)." },
+];
+
 // ============ QUIZ ============
-const QUIZ = [
+const QUIZ_BANK = [
+  // --- Module 1 : Hackers ---
   {
     q: "Un hacker mandaté légalement pour tester la sécurité d'un système est appelé :",
     options: ["Black Hat", "White Hat", "Script Kiddie", "Hacktiviste"],
@@ -807,11 +1578,75 @@ const QUIZ = [
     explain: "Le White Hat agit avec autorisation, dans un cadre légal, pour renforcer la sécurité."
   },
   {
+    q: "Un attaquant qui pirate sans autorisation, pour le profit ou par malveillance, est un :",
+    options: ["White Hat", "Grey Hat", "Black Hat", "Hacktiviste"],
+    correct: 2,
+    explain: "Le Black Hat agit sans autorisation et avec une intention nuisible."
+  },
+  {
+    q: "Un individu qui utilise des outils créés par d'autres, sans réelle expertise technique, est appelé :",
+    options: ["Acteur étatique", "Script Kiddie", "White Hat", "Grey Hat"],
+    correct: 1,
+    explain: "Le Script Kiddie utilise des scripts existants sans en maîtriser le fonctionnement."
+  },
+  {
+    q: "Un groupe soutenu par un État, avec des moyens techniques considérables, est appelé :",
+    options: ["Acteur étatique (APT)", "Hacktiviste", "Script Kiddie", "Grey Hat"],
+    correct: 0,
+    explain: "Les acteurs étatiques (APT) disposent de ressources quasi illimitées pour l'espionnage ou le sabotage."
+  },
+  {
+    q: "Un hacker qui pirate pour défendre une cause politique ou sociale est appelé :",
+    options: ["White Hat", "Hacktiviste", "Script Kiddie", "Black Hat"],
+    correct: 1,
+    explain: "L'hacktiviste utilise le piratage comme moyen d'action militante."
+  },
+
+  // --- Module 2 : Types de piratage ---
+  {
     q: "Un email frauduleux imitant votre banque pour voler vos identifiants est une attaque de type :",
     options: ["Ransomware", "DDoS", "Phishing", "Injection SQL"],
     correct: 2,
     explain: "Le phishing exploite la confiance en imitant une entité légitime."
   },
+  {
+    q: "Un logiciel qui chiffre vos fichiers et exige un paiement pour les débloquer est un :",
+    options: ["Ransomware", "Malware générique", "Ver informatique", "Cheval de Troie"],
+    correct: 0,
+    explain: "Le ransomware chiffre les données puis exige une rançon pour la clé de déchiffrement."
+  },
+  {
+    q: "Une attaque qui submerge un serveur de requêtes pour le rendre indisponible s'appelle :",
+    options: ["Phishing", "Attaque DDoS", "Injection SQL", "Ingénierie sociale"],
+    correct: 1,
+    explain: "Le déni de service distribué (DDoS) sature le serveur avec un volume anormal de requêtes."
+  },
+  {
+    q: "Manipuler psychologiquement une personne pour obtenir des informations confidentielles relève de :",
+    options: ["L'injection SQL", "L'ingénierie sociale", "L'attaque par force brute", "Le MITM"],
+    correct: 1,
+    explain: "L'ingénierie sociale exploite la confiance et les émotions plutôt qu'une faille technique."
+  },
+  {
+    q: "Insérer du code malveillant dans un champ de formulaire pour manipuler une base de données est une :",
+    options: ["Injection SQL", "Attaque DDoS", "Attaque MITM", "Attaque par force brute"],
+    correct: 0,
+    explain: "L'injection SQL exploite un champ de saisie mal sécurisé pour atteindre la base de données."
+  },
+  {
+    q: "S'interposer secrètement entre deux parties en communication pour intercepter leurs échanges est :",
+    options: ["Un ransomware", "Une attaque de l'homme du milieu (MITM)", "Un phishing", "Une injection SQL"],
+    correct: 1,
+    explain: "L'attaque MITM permet de lire ou modifier des échanges à l'insu des deux parties."
+  },
+  {
+    q: "Tester automatiquement un grand nombre de combinaisons de mots de passe est une attaque :",
+    options: ["Par force brute", "Par ingénierie sociale", "De type ransomware", "De type DDoS"],
+    correct: 0,
+    explain: "L'attaque par force brute teste systématiquement des combinaisons jusqu'à trouver le bon mot de passe."
+  },
+
+  // --- Module 3 : Kill chain ---
   {
     q: "Dans la cyber kill chain, que se passe-t-il à l'étape 'Reconnaissance' ?",
     options: ["L'attaquant chiffre les fichiers", "L'attaquant collecte des informations sur la cible", "L'attaquant installe une porte dérobée", "L'attaquant demande une rançon"],
@@ -819,17 +1654,239 @@ const QUIZ = [
     explain: "La reconnaissance est la phase de collecte d'informations, avant même de choisir l'outil d'attaque."
   },
   {
+    q: "Qu'est-ce qu'une porte dérobée (backdoor) installée lors de la phase 'Installation' ?",
+    options: ["Un antivirus", "Un accès persistant caché pour revenir dans le système", "Un pare-feu renforcé", "Une sauvegarde chiffrée"],
+    correct: 1,
+    explain: "La backdoor permet à l'attaquant de revenir même si la faille initiale est corrigée."
+  },
+  {
+    q: "La dernière étape de la cyber kill chain, 'Action sur l'objectif', correspond à :",
+    options: ["La collecte d'informations", "Le vol de données ou le sabotage final", "L'envoi de l'email piégé", "La création de l'outil d'attaque"],
+    correct: 1,
+    explain: "C'est l'étape où l'attaquant réalise son objectif final : vol, sabotage, rançon, etc."
+  },
+
+  // --- Module 4 : Prévention ---
+  {
     q: "Quelle mesure rend un mot de passe volé insuffisant pour accéder à un compte ?",
     options: ["Un pare-feu", "Une sauvegarde", "L'authentification à deux facteurs", "Un VPN"],
     correct: 2,
     explain: "La double authentification ajoute une vérification supplémentaire que l'attaquant n'a pas."
   },
   {
+    q: "Pourquoi les mises à jour régulières sont-elles essentielles à la sécurité ?",
+    options: ["Elles accélèrent l'ordinateur", "Elles corrigent des failles connues avant qu'elles soient exploitées", "Elles changent le mot de passe automatiquement", "Elles suppriment les fichiers inutiles"],
+    correct: 1,
+    explain: "Les mises à jour corrigent des vulnérabilités identifiées, réduisant la surface d'attaque."
+  },
+  {
+    q: "Le principe du 'moindre privilège' consiste à :",
+    options: ["Donner tous les accès à tout le monde", "Limiter chaque compte aux accès strictement nécessaires", "Supprimer tous les mots de passe", "Désactiver les pare-feux"],
+    correct: 1,
+    explain: "Limiter les accès réduit les dégâts possibles en cas de compromission d'un compte."
+  },
+  {
+    q: "En cas de ransomware, qu'est-ce qui permet de restaurer les données sans payer la rançon ?",
+    options: ["Un antivirus", "Une sauvegarde récente et hors ligne", "Un mot de passe complexe", "Un VPN"],
+    correct: 1,
+    explain: "Une sauvegarde à jour et déconnectée du réseau permet de restaurer les données sans céder au chantage."
+  },
+
+  // --- Module 5 : Protection quotidienne ---
+  {
     q: "Que faut-il faire face à une demande urgente et inhabituelle de virement par email ?",
     options: ["Exécuter rapidement pour ne pas bloquer l'activité", "Vérifier par un second canal (téléphone, en personne)", "Répondre directement à l'email pour confirmer", "Transférer l'email à un collègue au hasard"],
     correct: 1,
     explain: "L'urgence est une technique classique d'ingénierie sociale. Toujours vérifier par un canal indépendant."
   },
+  {
+    q: "Est-il prudent de se connecter à ses comptes sensibles via un Wi-Fi public sans protection ?",
+    options: ["Oui, aucun risque", "Non, mieux vaut utiliser un VPN ou éviter", "Oui si le mot de passe est fort", "Cela n'a aucune importance"],
+    correct: 1,
+    explain: "Les réseaux publics non sécurisés facilitent l'interception des données (attaque MITM)."
+  },
+
+  // --- Module 6 : Glossaire ---
+  {
+    q: "Que désigne le terme 'zero-day' en cybersécurité ?",
+    options: ["Un antivirus gratuit", "Une faille inconnue de l'éditeur, exploitée avant qu'un correctif existe", "Un mot de passe expiré", "Une sauvegarde automatique"],
+    correct: 1,
+    explain: "Une faille zero-day est exploitée avant même que l'éditeur du logiciel en ait connaissance."
+  },
+  {
+    q: "Qu'est-ce qu'un 'botnet' ?",
+    options: ["Un logiciel de sauvegarde", "Un réseau d'appareils infectés contrôlés à distance", "Un type de pare-feu", "Un protocole de chiffrement"],
+    correct: 1,
+    explain: "Un botnet est utilisé notamment pour lancer des attaques DDoS à grande échelle."
+  },
+  {
+    q: "Un VPN sert principalement à :",
+    options: ["Accélérer la connexion internet", "Chiffrer la connexion pour la rendre illisible à un observateur externe", "Supprimer les virus", "Créer des sauvegardes automatiques"],
+    correct: 1,
+    explain: "Le VPN chiffre le trafic, rendant les données illisibles pour un tiers qui les intercepterait."
+  },
+
+  // --- Module 7-9 : Cas réels / simulateur / incident ---
+  {
+    q: "Un fournisseur habituel demande soudainement de virer de l'argent vers un 'nouveau compte bancaire'. Le bon réflexe est de :",
+    options: ["Effectuer le virement rapidement pour ne pas froisser le fournisseur", "Appeler le fournisseur sur un numéro connu à l'avance pour vérifier", "Répondre à l'email pour confirmer les coordonnées", "Ignorer complètement le message"],
+    correct: 1,
+    explain: "Toute modification de coordonnées bancaires doit être vérifiée par un canal indépendant et déjà connu."
+  },
+  {
+    q: "Vous trouvez une clé USB inconnue sur le parking de votre entreprise. Que faites-vous ?",
+    options: ["Vous la branchez pour voir à qui elle appartient", "Vous la remettez au service informatique sans la brancher", "Vous la jetez à la poubelle", "Vous la gardez pour vous"],
+    correct: 1,
+    explain: "Une clé USB inconnue peut contenir un malware qui s'exécute automatiquement au branchement."
+  },
+  {
+    q: "Dans les toutes premières minutes après avoir détecté une possible attaque, il faut avant tout :",
+    options: ["Éteindre immédiatement l'appareil", "Déconnecter l'appareil du réseau sans l'éteindre", "Ne rien faire et attendre", "Formater le disque dur"],
+    correct: 1,
+    explain: "Déconnecter sans éteindre préserve les preuves en mémoire tout en stoppant la propagation."
+  },
+  {
+    q: "Un support technique vous appelle et demande votre mot de passe pour 'résoudre un problème urgent'. Vous devez :",
+    options: ["Le donner car c'est urgent", "Refuser et rappeler le service via un numéro officiel connu", "Le donner uniquement par SMS", "Donner un mot de passe légèrement modifié"],
+    correct: 1,
+    explain: "Aucun service légitime ne demande un mot de passe par téléphone. C'est une technique de vishing."
+  },
+];
+
+// Tire un sous-ensemble aléatoire de N questions, dans un ordre mélangé.
+function getRandomQuiz(n = 10){
+  const pool = [...QUIZ_BANK];
+  for (let i = pool.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, Math.min(n, pool.length));
+}
+
+// ============ MODULE 7 : CAS RÉELS / SCÉNARIOS ============
+const CASE_STUDIES = [
+  {
+    title: "La fausse facture du fournisseur",
+    tag: "Phishing ciblé (spear phishing)",
+    icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>`,
+    story: "Le service comptabilité d'une PME reçoit un email d'un fournisseur habituel, avec la bonne mise en page et un ton familier. La facture jointe demande un virement vers un nouveau compte bancaire, justifié par un 'changement de banque'. L'employé, habitué à ce fournisseur, effectue le virement sans appeler pour confirmer.",
+    analyse: "L'attaquant avait auparavant compromis la messagerie du vrai fournisseur ou créé un domaine visuellement identique. Le changement de coordonnées bancaires est le signal d'alerte numéro un dans ce type de fraude, souvent appelée 'fraude au président' ou 'fraude au virement'.",
+    lesson: "Toute modification de coordonnées bancaires doit être vérifiée par un appel téléphonique, sur un numéro connu à l'avance — jamais celui fourni dans l'email suspect."
+  },
+  {
+    title: "La clé USB 'oubliée' dans le parking",
+    tag: "Ingénierie sociale / Malware",
+    icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="9" width="8" height="12" rx="1"/><path d="M8 9V5a2 2 0 014 0v4"/><circle cx="10" cy="14" r="1.5"/></svg>`,
+    story: "Un employé trouve une clé USB sur le parking de son entreprise, avec une étiquette 'Salaires 2025 — Confidentiel'. Curieux, il la branche sur son poste de travail pour voir de qui il s'agit et prévenir les RH.",
+    analyse: "La clé contenait un programme malveillant qui s'est exécuté automatiquement, ouvrant un accès distant pour l'attaquant. La curiosité humaine est ici l'unique vecteur d'attaque — aucune faille technique n'a été nécessaire.",
+    lesson: "Ne jamais brancher un support de stockage inconnu sur un appareil professionnel. Toute clé trouvée doit être remise directement au service informatique, sans être insérée nulle part."
+  },
+  {
+    title: "L'appel du 'support technique'",
+    tag: "Ingénierie sociale par téléphone (vishing)",
+    icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6A2 2 0 0122 16.9z"/></svg>`,
+    story: "Un employé reçoit un appel d'une personne se présentant comme le 'support informatique interne', évoquant un problème urgent de sécurité sur son poste. La personne demande son mot de passe pour 'vérifier et corriger le problème immédiatement'.",
+    analyse: "Aucun service informatique légitime ne demande un mot de passe par téléphone. L'urgence et l'autorité feinte sont les deux leviers utilisés pour court-circuiter la réflexion de la victime.",
+    lesson: "Ne jamais communiquer un mot de passe par téléphone, même à un interlocuteur qui semble légitime. Raccrocher et rappeler le service concerné via un numéro officiel connu."
+  },
+  {
+    title: "Le site de connexion presque identique",
+    tag: "Phishing / Faux site (typosquatting)",
+    icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 010 18M3 12h18"/></svg>`,
+    story: "Une personne clique sur un lien reçu par SMS annonçant un colis en attente. La page ressemble exactement au site du transporteur habituel. Elle saisit ses identifiants et les informations de sa carte bancaire pour 'régler des frais de douane'.",
+    analyse: "Le nom de domaine différait d'une seule lettre du site officiel. Le design, les couleurs et les logos étaient copiés à l'identique — seule l'URL trahissait la supercherie.",
+    lesson: "Toujours vérifier l'URL exacte avant de saisir des informations sensibles, et privilégier la saisie manuelle de l'adresse officielle plutôt que de cliquer sur un lien reçu par SMS ou email."
+  },
+];
+
+// ============ MODULE 8 : SIMULATEUR ANTI-PHISHING ============
+const PHISHING_SIMULATOR = [
+  {
+    type: "email",
+    from: "securite@banque-online-fr.com",
+    subject: "⚠ Action requise : votre compte sera suspendu",
+    preview: "Cher client, nous avons détecté une activité inhabituelle sur votre compte. Cliquez immédiatement sur le lien ci-dessous pour éviter la suspension sous 24h : bit.ly/verif-compte-urgent",
+    hotspots: [
+      { label: "Domaine suspect", explain: "'banque-online-fr.com' n'est pas le domaine officiel d'une banque réelle — les banques utilisent leur propre nom de domaine vérifié." },
+      { label: "Urgence artificielle", explain: "La menace de suspension sous 24h pousse à agir sans réfléchir, technique classique de manipulation." },
+      { label: "Lien raccourci", explain: "Un lien raccourci (bit.ly) masque la vraie destination — impossible de vérifier où il mène réellement avant de cliquer." },
+    ],
+    isPhishing: true
+  },
+  {
+    type: "email",
+    from: "no-reply@github.com",
+    subject: "Nouvelle connexion à votre compte",
+    preview: "Une connexion depuis un nouvel appareil a été détectée. Si ce n'était pas vous, changez votre mot de passe depuis les paramètres de votre compte sur github.com.",
+    hotspots: [
+      { label: "Domaine officiel", explain: "L'adresse correspond exactement au domaine officiel du service, sans variation suspecte." },
+      { label: "Pas de lien direct vers une page de connexion", explain: "Le message invite à se rendre sur le site via ses propres accès habituels, plutôt que de cliquer un lien." },
+    ],
+    isPhishing: false
+  },
+  {
+    type: "sms",
+    from: "+33 6 XX XX XX XX",
+    subject: "Colis en attente",
+    preview: "Votre colis est en attente de livraison. Réglez les frais de douane (2,99€) ici : livraison-colis-fr.net/paiement",
+    hotspots: [
+      { label: "Nom de domaine générique", explain: "'.net' avec un nom générique n'est pas cohérent avec un service postal officiel reconnu." },
+      { label: "Petit montant suspect", explain: "Les petits montants sont utilisés pour paraître anodins et capturer des données de carte bancaire facilement." },
+      { label: "Numéro masqué", explain: "L'expéditeur n'affiche pas de nom d'entreprise reconnu, seulement un numéro." },
+    ],
+    isPhishing: true
+  },
+  {
+    type: "email",
+    from: "newsletter@lemonde.fr",
+    subject: "Votre résumé hebdomadaire de l'actualité",
+    preview: "Voici les articles les plus lus cette semaine. Bonne lecture ! Pour vous désabonner, cliquez ici.",
+    hotspots: [
+      { label: "Contenu non sollicitant", explain: "Aucune demande d'action urgente, d'identifiants ou de paiement." },
+      { label: "Domaine cohérent", explain: "L'adresse d'expéditeur correspond au média officiel." },
+    ],
+    isPhishing: false
+  },
+];
+
+// ============ MODULE 9 : PLAN DE RÉPONSE À INCIDENT ============
+const INCIDENT_PLAN = [
+  {
+    phase: "Immédiat (0–10 min)",
+    icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>`,
+    actions: [
+      "Déconnecter l'appareil du réseau (Wi-Fi, câble) sans l'éteindre — cela préserve les preuves en mémoire.",
+      "Ne pas paniquer ni tenter de 'nettoyer' seul le système avant d'avoir prévenu les bonnes personnes.",
+      "Noter l'heure exacte et ce qui a été observé (message, comportement anormal, fichier suspect)."
+    ]
+  },
+  {
+    phase: "Court terme (10–60 min)",
+    icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6A2 2 0 0122 16.9z"/></svg>`,
+    actions: [
+      "Prévenir immédiatement le service informatique ou le responsable sécurité désigné.",
+      "Si des identifiants ont pu être compromis, les changer depuis un appareil non affecté.",
+      "Alerter les collègues concernés si l'incident a pu se propager (email suspect envoyé depuis le compte, par exemple)."
+    ]
+  },
+  {
+    phase: "Suivi (heures suivantes)",
+    icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,
+    actions: [
+      "Documenter l'incident : ce qui s'est passé, quand, quelles actions ont été prises.",
+      "Vérifier les comptes et systèmes liés pour détecter d'éventuels signes de compromission additionnels.",
+      "Si des données personnelles ou sensibles sont concernées, évaluer les obligations de notification (clients, autorités compétentes)."
+    ]
+  },
+  {
+    phase: "Après l'incident",
+    icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>`,
+    actions: [
+      "Analyser comment l'incident s'est produit pour corriger la faille (technique ou humaine).",
+      "Mettre à jour les procédures et former à nouveau si nécessaire sur le point de vulnérabilité identifié.",
+      "Conserver une trace de l'incident pour améliorer la préparation face aux prochains."
+    ]
+  }
 ];
 
 
@@ -863,24 +1920,39 @@ document.addEventListener('DOMContentLoaded', () => {
   closeBtn.addEventListener('click', closeSidebar);
   scrim.addEventListener('click', closeSidebar);
 
-  /* ---------- SPA routing: show only the targeted page ---------- */
+  /* ---------- SPA routing: show only the targeted page + track progress ---------- */
   const pages = document.querySelectorAll('.page');
   const spyLinks = document.querySelectorAll('.sidebar-nav a[data-target]');
+  const TRACKED_IDS = ['module-1','module-2','module-3','module-4','module-5','module-6','module-7','module-8','module-9','quiz'];
+  const visited = new Set();
+  const progressFill = document.getElementById('progressFill');
+  const progressPct = document.getElementById('progressPct');
+
+  function updateProgress(){
+    const pct = Math.round((visited.size / TRACKED_IDS.length) * 100);
+    progressFill.style.width = pct + '%';
+    progressPct.textContent = pct + '%';
+  }
 
   function showPage(id){
     pages.forEach(p => p.classList.toggle('page-active', p.id === id));
     spyLinks.forEach(a => a.classList.toggle('active', a.dataset.target === id));
     document.getElementById('main').scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
     window.scrollTo(0, 0);
+    if (TRACKED_IDS.includes(id) && !visited.has(id)){
+      visited.add(id);
+      updateProgress();
+    }
   }
 
   document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', (e) => {
+    link.addEventListener('click', function(e){
       e.preventDefault();
-      const target = link.dataset.target;
+      const target = this.dataset.target;
       showPage(target);
       closeSidebar();
       history.replaceState(null, '', '#' + target);
+      if (target === 'certificate' && typeof renderCertificateGate === 'function') renderCertificateGate();
     });
   });
 
@@ -889,7 +1961,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const validInitial = document.getElementById(initialId) ? initialId : 'accueil';
   showPage(validInitial);
 
-  /* ---------- Theme toggle (night / day mode) ---------- */
+  /* ---------- Theme toggle (night / day mode) — light mode is default ---------- */
   const themeToggle = document.getElementById('themeToggle');
   const themeLabel = document.getElementById('themeLabel');
   const themeIcon = document.getElementById('themeIcon');
@@ -911,6 +1983,23 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTheme(!isLight);
   });
 
+  // Initialize toggle visuals to match the default light mode already set on <body>
+  applyTheme(true);
+
+  /* ---------- Module 1 : hackers grid ---------- */
+  const hackerGrid = document.getElementById('hackerGrid');
+  hackerGrid.innerHTML = HACKERS.map(h => `
+    <article class="hat-card" style="--hat-accent:${h.accent}">
+      <div class="hat-scene-wrap">${h.scene}</div>
+      <h3>${h.title}</h3>
+      <span class="hat-tag ${h.tagClass}">${h.tag}</span>
+      <p class="hat-def"><b>Définition :</b> ${h.definition}</p>
+      <p class="hat-line"><b>Motivation :</b> ${h.motivation}</p>
+      <p class="hat-line"><b>Exemple :</b> ${h.exemple}</p>
+      <p class="hat-risk"><b>Niveau de risque :</b> <span>${h.risque}</span></p>
+    </article>
+  `).join('');
+
   /* ---------- Module 2 : attacks accordion ---------- */
   const attackList = document.getElementById('attackList');
   attackList.innerHTML = ATTACKS.map((a, i) => `
@@ -922,8 +2011,12 @@ document.addEventListener('DOMContentLoaded', () => {
         <svg class="attack-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
       </summary>
       <div class="attack-body">
+        <div class="attack-scene-wrap">${a.scene}</div>
+        <p><b>Définition :</b> ${a.definition}</p>
         <p><b>Comment elle est lancée :</b> ${a.lancement}</p>
-        <p style="margin-top:10px;"><b>Comment elle fonctionne :</b> ${a.fonctionnement}</p>
+        <p><b>Comment elle fonctionne :</b> ${a.fonctionnement}</p>
+        <p><b>Signes qui doivent alerter :</b> ${a.signes}</p>
+        <p><b>Impact :</b> ${a.impact}</p>
       </div>
     </details>
   `).join('');
@@ -966,8 +2059,137 @@ document.addEventListener('DOMContentLoaded', () => {
     item.addEventListener('click', () => item.classList.toggle('checked'));
   });
 
+  /* ---------- Module 7 : case studies ---------- */
+  const caseList = document.getElementById('caseList');
+  caseList.innerHTML = CASE_STUDIES.map((c, i) => `
+    <article class="case-card">
+      <div class="case-head">
+        <div class="case-icon">${c.icon}</div>
+        <div>
+          <h3>${c.title}</h3>
+          <span class="case-tag">${c.tag}</span>
+        </div>
+      </div>
+      <div class="case-block">
+        <span class="case-label">Le scénario</span>
+        <p>${c.story}</p>
+      </div>
+      <div class="case-block">
+        <span class="case-label">Ce qui s'est réellement passé</span>
+        <p>${c.analyse}</p>
+      </div>
+      <div class="case-block case-lesson">
+        <span class="case-label">À retenir</span>
+        <p>${c.lesson}</p>
+      </div>
+    </article>
+  `).join('');
+
+  /* ---------- Module 8 : phishing simulator ---------- */
+  const simWrap = document.getElementById('simWrap');
+  let simIndex = 0;
+  let simScore = 0;
+
+  function renderSim(){
+    if (simIndex >= PHISHING_SIMULATOR.length){
+      simWrap.innerHTML = `
+        <div class="sim-result">
+          <div class="sim-result-score">${simScore}/${PHISHING_SIMULATOR.length}</div>
+          <p>messages correctement identifiés.</p>
+          <button class="btn btn-ghost" id="simRestart">Recommencer le simulateur</button>
+        </div>`;
+      document.getElementById('simRestart').addEventListener('click', () => {
+        simIndex = 0; simScore = 0; renderSim();
+      });
+      return;
+    }
+    const item = PHISHING_SIMULATOR[simIndex];
+    simWrap.innerHTML = `
+      <div class="sim-progress-label">Message ${simIndex + 1} / ${PHISHING_SIMULATOR.length}</div>
+      <div class="sim-message-card">
+        <div class="sim-message-head">
+          <span class="sim-type-badge">${item.type === 'email' ? '✉ Email' : '💬 SMS'}</span>
+          <span class="sim-from">${item.from}</span>
+        </div>
+        <div class="sim-subject">${item.subject}</div>
+        <p class="sim-preview">${item.preview}</p>
+      </div>
+      <div class="sim-choices">
+        <button class="btn btn-ghost sim-choice" data-choice="phishing">⚠ C'est du phishing</button>
+        <button class="btn btn-ghost sim-choice" data-choice="legit">✓ C'est légitime</button>
+      </div>
+      <div class="sim-feedback" id="simFeedback"></div>
+      <div class="sim-next" id="simNextWrap" style="display:none;">
+        <button class="btn btn-primary" id="simNext">
+          ${simIndex < PHISHING_SIMULATOR.length - 1 ? 'Message suivant' : 'Voir le résultat'}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    `;
+
+    const choiceBtns = simWrap.querySelectorAll('.sim-choice');
+    choiceBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const chosePhishing = btn.dataset.choice === 'phishing';
+        choiceBtns.forEach(b => b.setAttribute('disabled','true'));
+        const correct = chosePhishing === item.isPhishing;
+        if (correct) simScore++;
+        btn.classList.add(correct ? 'correct' : 'wrong');
+
+        const feedback = document.getElementById('simFeedback');
+        const hotspotsHtml = item.hotspots.map(h => `<li><b>${h.label}</b> — ${h.explain}</li>`).join('');
+        feedback.classList.add('show', item.isPhishing ? 'ko' : 'ok');
+        feedback.innerHTML = `
+          <p>${correct ? '✓ Bonne analyse.' : '✗ Pas tout à fait.'} Ce message est <b>${item.isPhishing ? 'frauduleux' : 'légitime'}</b>.</p>
+          <ul class="sim-hotspots">${hotspotsHtml}</ul>
+        `;
+        document.getElementById('simNextWrap').style.display = 'block';
+      });
+    });
+
+    document.getElementById('simNext')?.addEventListener('click', () => {
+      simIndex++;
+      renderSim();
+    });
+  }
+  renderSim();
+
+  /* ---------- Module 9 : incident response plan ---------- */
+  const incidentTimeline = document.getElementById('incidentTimeline');
+  incidentTimeline.innerHTML = INCIDENT_PLAN.map((p, i) => `
+    <div class="incident-phase">
+      <div class="incident-phase-head">
+        <div class="incident-icon">${p.icon}</div>
+        <h3>${p.phase}</h3>
+      </div>
+      <ul class="incident-actions">
+        ${p.actions.map(a => `<li>${a}</li>`).join('')}
+      </ul>
+    </div>
+  `).join('');
+
+  /* ---------- Module 6 : glossary ---------- */
+  const glossaryGrid = document.getElementById('glossaryGrid');
+  glossaryGrid.innerHTML = GLOSSARY.map(g => `
+    <div class="glossary-item">
+      <div class="glossary-term">${g.term}</div>
+      <p class="glossary-def">${g.def}</p>
+    </div>
+  `).join('');
+
   /* ---------- Quiz ---------- */
   const quizBox = document.getElementById('quizBox');
+
+  function getRandomQuiz(n){
+    const pool = [...QUIZ_BANK];
+    for (let i = pool.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool.slice(0, Math.min(n, pool.length));
+  }
+
+  let QUIZ = getRandomQuiz(10);
   let qIndex = 0;
   let score = 0;
 
@@ -978,7 +2200,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderQuestion(){
-    const item = QUIZ[qIndex];
+    const raw = QUIZ[qIndex];
+    // Mélange les options à l'affichage, en recalculant l'index de la bonne réponse
+    const order = raw.options.map((_, i) => i);
+    for (let i = order.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    const shuffledOptions = order.map(i => raw.options[i]);
+    const correctShuffledIdx = order.indexOf(raw.correct);
+    const item = { q: raw.q, options: shuffledOptions, correct: correctShuffledIdx, explain: raw.explain };
+
     quizBox.innerHTML = `
       ${renderProgress()}
       <div class="quiz-card">
@@ -1033,21 +2265,473 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pct >= 80) msg = "Excellent niveau de vigilance. Vous êtes prêt·e à repérer les menaces courantes.";
     else if (pct >= 50) msg = "Bonne base ! Revoyez les modules concernés pour consolider.";
 
+    const eligible = pct >= 60;
+    quizFinalScore = score;
+    quizFinalPct = pct;
+    quizFinalEligible = eligible;
+
     quizBox.innerHTML = `
       <div class="quiz-card quiz-result">
         <div class="quiz-result-score">${score}/${QUIZ.length}</div>
         <p>${msg}</p>
-        <div style="margin-top:24px;">
+        <div class="quiz-result-actions">
           <button class="btn btn-ghost" id="quizRestart">Recommencer le quiz</button>
+          ${eligible ? `<button class="btn btn-primary" id="quizGoCert">
+            Obtenir mon attestation
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>` : ''}
         </div>
+        ${!eligible ? `<p class="quiz-cert-hint">Un score d'au moins 60% est requis pour débloquer l'attestation.</p>` : ''}
       </div>
     `;
     document.getElementById('quizRestart').addEventListener('click', () => {
-      qIndex = 0; score = 0; renderQuestion();
+      QUIZ = getRandomQuiz(10); qIndex = 0; score = 0; renderQuestion();
+    });
+    document.getElementById('quizGoCert')?.addEventListener('click', () => {
+      showPage('certificate');
+      closeSidebar();
+      history.replaceState(null, '', '#certificate');
+      renderCertificateGate();
     });
   }
 
   renderQuestion();
+
+  /* ================= CERTIFICATE / ATTESTATION SYSTEM ================= */
+  let quizFinalScore = 0;
+  let quizFinalPct = 0;
+  let quizFinalEligible = false;
+  let certLearnerName = '';
+  let certLearnerPseudo = '';
+  let chosenTemplate = 'classic';
+
+  const certificateWrap = document.getElementById('certificateWrap');
+
+  const CERT_TEMPLATES = [
+    { id: 'classic', label: 'Classique', desc: 'Sobre, fond clair, cadre vert signature.' },
+    { id: 'dark', label: 'Sombre', desc: 'Fond nuit, accents cyan — look "console sécurité".' },
+    { id: 'gold', label: 'Prestige', desc: 'Fond crème, liseré doré, typographie élégante.' },
+  ];
+
+  function certNumber(){
+    const d = new Date();
+    return `OL-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${Math.floor(1000 + Math.random()*9000)}`;
+  }
+
+  function renderCertificateGate(){
+    if (!quizFinalEligible){
+      certificateWrap.innerHTML = `
+        <div class="cert-gate">
+          <div class="cert-gate-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+          </div>
+          <h3>Attestation verrouillée</h3>
+          <p>Réussissez le quiz final avec un score d'au moins 60% pour débloquer votre attestation personnalisée.</p>
+          <a href="#quiz" class="btn btn-primary nav-link" data-target="quiz">
+            Passer le quiz
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>`;
+      rewireNavLinks();
+      return;
+    }
+    renderCertificateForm();
+  }
+
+  function renderCertificateForm(){
+    certificateWrap.innerHTML = `
+      <div class="cert-unlocked-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Quiz réussi — score ${quizFinalScore}/${QUIZ.length} (${quizFinalPct}%)
+      </div>
+
+      <div class="cert-form-grid">
+        <div class="cert-form-col">
+          <h3 class="cert-step-title">1. Vos informations</h3>
+          <label class="cert-label" for="certName">Nom complet (apparaîtra sur l'attestation)</label>
+          <input class="cert-input" type="text" id="certName" placeholder="Ex : Jean Kaboré" maxlength="60">
+          <label class="cert-label" for="certPseudo">Pseudo (optionnel)</label>
+          <input class="cert-input" type="text" id="certPseudo" placeholder="Ex : j.kabz" maxlength="40">
+
+          <h3 class="cert-step-title" style="margin-top:26px;">2. Modèle d'attestation</h3>
+          <div class="cert-template-list" id="certTemplateList">
+            ${CERT_TEMPLATES.map(t => `
+              <button class="cert-template-option ${t.id === chosenTemplate ? 'selected' : ''}" data-template="${t.id}">
+                <span class="cert-template-swatch swatch-${t.id}"></span>
+                <span>
+                  <span class="cert-template-name">${t.label}</span>
+                  <span class="cert-template-desc">${t.desc}</span>
+                </span>
+              </button>
+            `).join('')}
+          </div>
+
+          <h3 class="cert-step-title" style="margin-top:26px;">3. Votre signature</h3>
+          <p class="cert-sign-hint">Signez avec la souris ou le doigt directement dans le cadre.</p>
+          <div class="cert-sign-pad-wrap">
+            <canvas id="certSignPad" class="cert-sign-pad" width="480" height="150"></canvas>
+            <div class="cert-sign-placeholder" id="certSignPlaceholder">Signez ici</div>
+          </div>
+          <div class="cert-sign-actions">
+            <button class="btn btn-ghost cert-sign-clear" id="certSignClear" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>
+              Effacer
+            </button>
+          </div>
+        </div>
+
+        <div class="cert-form-col cert-preview-col">
+          <h3 class="cert-step-title">4. Aperçu</h3>
+          <div class="cert-preview-frame" id="certPreviewFrame"></div>
+          <button class="btn btn-primary cert-download-btn" id="certDownloadBtn" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
+            Télécharger l'attestation (PNG)
+          </button>
+        </div>
+      </div>
+    `;
+
+    const nameInput = document.getElementById('certName');
+    const pseudoInput = document.getElementById('certPseudo');
+    const downloadBtn = document.getElementById('certDownloadBtn');
+    const previewFrame = document.getElementById('certPreviewFrame');
+    const signPad = document.getElementById('certSignPad');
+    const signPlaceholder = document.getElementById('certSignPlaceholder');
+    const signClearBtn = document.getElementById('certSignClear');
+
+    /* --- Signature pad (mouse + touch) --- */
+    const sctx = signPad.getContext('2d');
+    let drawing = false;
+    let hasSignature = false;
+    let lastX = 0, lastY = 0;
+
+    function setupSignStyle(){
+      sctx.lineWidth = 2.4;
+      sctx.lineCap = 'round';
+      sctx.lineJoin = 'round';
+      sctx.strokeStyle = document.body.classList.contains('light-mode') ? '#14181F' : '#E8EAED';
+    }
+    setupSignStyle();
+
+    function padPos(e){
+      const rect = signPad.getBoundingClientRect();
+      const scaleX = signPad.width / rect.width;
+      const scaleY = signPad.height / rect.height;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+    }
+
+    function startDraw(e){
+      e.preventDefault();
+      drawing = true;
+      hasSignature = true;
+      signPlaceholder.style.display = 'none';
+      const pos = padPos(e);
+      lastX = pos.x; lastY = pos.y;
+    }
+    function moveDraw(e){
+      if (!drawing) return;
+      e.preventDefault();
+      const pos = padPos(e);
+      sctx.beginPath();
+      sctx.moveTo(lastX, lastY);
+      sctx.lineTo(pos.x, pos.y);
+      sctx.stroke();
+      lastX = pos.x; lastY = pos.y;
+    }
+    function endDraw(){ drawing = false; refreshPreview(); }
+
+    signPad.addEventListener('mousedown', startDraw);
+    signPad.addEventListener('mousemove', moveDraw);
+    window.addEventListener('mouseup', endDraw);
+    signPad.addEventListener('touchstart', startDraw, { passive:false });
+    signPad.addEventListener('touchmove', moveDraw, { passive:false });
+    signPad.addEventListener('touchend', endDraw);
+
+    signClearBtn.addEventListener('click', () => {
+      sctx.clearRect(0, 0, signPad.width, signPad.height);
+      hasSignature = false;
+      signPlaceholder.style.display = 'flex';
+      refreshPreview();
+    });
+
+    function refreshPreview(){
+      certLearnerName = nameInput.value.trim();
+      certLearnerPseudo = pseudoInput.value.trim();
+      const ready = certLearnerName.length > 1;
+      downloadBtn.disabled = !ready;
+      previewFrame.innerHTML = buildCertificateSVG(chosenTemplate, {
+        name: certLearnerName || 'Votre nom apparaîtra ici',
+        pseudo: certLearnerPseudo,
+        score: quizFinalPct,
+        placeholder: !ready,
+        signatureData: hasSignature ? signPad.toDataURL('image/png') : null
+      });
+    }
+
+    nameInput.addEventListener('input', refreshPreview);
+    pseudoInput.addEventListener('input', refreshPreview);
+
+    document.querySelectorAll('.cert-template-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        chosenTemplate = btn.dataset.template;
+        document.querySelectorAll('.cert-template-option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        refreshPreview();
+      });
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      if (!certLearnerName) return;
+      generateCertificatePNG(chosenTemplate, {
+        name: certLearnerName,
+        pseudo: certLearnerPseudo,
+        score: quizFinalPct,
+        scoreRaw: `${quizFinalScore}/${QUIZ.length}`,
+        signatureData: hasSignature ? signPad.toDataURL('image/png') : null
+      });
+    });
+
+    refreshPreview();
+  }
+
+  // Re-bind .nav-link listeners for dynamically injected links (gate button)
+  function rewireNavLinks(){
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.removeEventListener('click', navClickHandler);
+      link.addEventListener('click', navClickHandler);
+    });
+  }
+  function navClickHandler(e){
+    e.preventDefault();
+    const target = this.dataset.target;
+    showPage(target);
+    closeSidebar();
+    history.replaceState(null, '', '#' + target);
+    if (target === 'certificate') renderCertificateGate();
+  }
+  rewireNavLinks();
+
+  function fmtDateTime(){
+    const d = new Date();
+    const date = d.toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
+    const time = d.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+    return { date, time };
+  }
+
+  function buildCertificateSVG(template, data){
+    const { date, time } = fmtDateTime();
+    const certNum = data._certNum || certNumber();
+    const opacity = data.placeholder ? '0.45' : '1';
+
+    const palettes = {
+      classic: { bg:'#FFFFFF', border:'#3DDC97', accent:'#1B9E6E', text:'#14181F', dim:'#5B6472', panel:'#F1F8F4' },
+      dark:    { bg:'#0B0E14', border:'#3DDC97', accent:'#3DDC97', text:'#E8EAED', dim:'#8B93A7', panel:'#131826' },
+      gold:    { bg:'#FBF7EE', border:'#C9A24B', accent:'#96731F', text:'#2A2013', dim:'#6B5D3F', panel:'#F3ECD9' },
+    };
+    const p = palettes[template] || palettes.classic;
+
+    return `
+    <svg viewBox="0 0 600 424" class="cert-svg" style="opacity:${opacity}">
+      <rect x="0" y="0" width="600" height="424" fill="${p.bg}"/>
+      <rect x="14" y="14" width="572" height="396" fill="none" stroke="${p.border}" stroke-width="2"/>
+      <rect x="22" y="22" width="556" height="380" fill="none" stroke="${p.border}" stroke-width="0.75" opacity="0.5"/>
+
+      <g transform="translate(300,58)">
+        <path d="M0 -20l16 5.5v11c0 12-7 19.5-16 25-9-5.5-16-13-16-25v-11l16-5.5z" fill="${p.accent}" opacity="0.15" stroke="${p.accent}" stroke-width="1.5"/>
+        <path d="M-8 -1l5.5 5.5L10 -8" fill="none" stroke="${p.accent}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <text x="300" y="98" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="13" letter-spacing="4" fill="${p.accent}">OVERLAB</text>
+
+      <text x="300" y="140" text-anchor="middle" font-family="Playfair Display, Space Grotesk, serif" font-weight="700" font-size="26" fill="${p.text}">Attestation de formation</text>
+      <text x="300" y="162" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" letter-spacing="2" fill="${p.dim}">CYBERSÉCURITÉ — SENSIBILISATION AUX MENACES NUMÉRIQUES</text>
+
+      <text x="300" y="205" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="${p.dim}">Ce document certifie que</text>
+      <text x="300" y="238" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-weight="700" font-size="27" fill="${p.accent}">${escapeXml(data.name)}</text>
+      ${data.pseudo ? `<text x="300" y="258" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="${p.dim}">(${escapeXml(data.pseudo)})</text>` : ''}
+
+      <text x="300" y="288" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="${p.dim}">a suivi avec succès la formation OverLab et obtenu un score de</text>
+      <text x="300" y="312" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="16" fill="${p.text}">${data.score}% au quiz de validation</text>
+
+      <line x1="70" y1="345" x2="210" y2="345" stroke="${p.border}" stroke-width="1"/>
+      ${data.signatureData ? `<image href="${data.signatureData}" x="75" y="313" width="130" height="34" preserveAspectRatio="xMidYMid meet"/>` : ''}
+      <text x="140" y="360" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="${p.dim}">Signature de l'apprenant</text>
+
+      <line x1="390" y1="345" x2="530" y2="345" stroke="${p.border}" stroke-width="1"/>
+      <image href="${TRAINER_SIGNATURE}" x="395" y="313" width="130" height="34" preserveAspectRatio="xMidYMid meet"/>
+      <text x="460" y="360" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="${p.dim}">Abimaël — Formateur</text>
+      <text x="460" y="372" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="${p.dim}">Créateur · Overdev</text>
+
+      <text x="300" y="388" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="${p.dim}">${date} — ${time}</text>
+      <text x="300" y="405" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="1" fill="${p.dim}">N° ATTESTATION : ${certNum}</text>
+    </svg>`;
+  }
+
+  function escapeXml(str){
+    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
+  }
+
+  function generateCertificatePNG(template, data){
+    const certNum = certNumber();
+    const { date, time } = fmtDateTime();
+
+    const palettes = {
+      classic: { bg:'#FFFFFF', border:'#3DDC97', accent:'#1B9E6E', text:'#14181F', dim:'#5B6472' },
+      dark:    { bg:'#0B0E14', border:'#3DDC97', accent:'#3DDC97', text:'#E8EAED', dim:'#8B93A7' },
+      gold:    { bg:'#FBF7EE', border:'#C9A24B', accent:'#96731F', text:'#2A2013', dim:'#6B5D3F' },
+    };
+    const p = palettes[template] || palettes.classic;
+
+    // High-res canvas (2x for crisp download)
+    const SCALE = 2.5;
+    const W = 1200, H = 848;
+    const canvas = document.createElement('canvas');
+    canvas.width = W * SCALE;
+    canvas.height = H * SCALE;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(SCALE, SCALE);
+
+    // Background
+    ctx.fillStyle = p.bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Border frames
+    ctx.strokeStyle = p.border;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(24, 24, W-48, H-48);
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.5;
+    ctx.strokeRect(40, 40, W-80, H-80);
+    ctx.globalAlpha = 1;
+
+    const cx = W/2;
+
+    // Shield emblem
+    ctx.save();
+    ctx.translate(cx, 118);
+    ctx.strokeStyle = p.accent;
+    ctx.fillStyle = p.accent;
+    ctx.globalAlpha = 0.15;
+    ctx.beginPath();
+    ctx.moveTo(0, -40);
+    ctx.lineTo(32, -29);
+    ctx.lineTo(32, -7);
+    ctx.quadraticCurveTo(32, 17, 0, 40);
+    ctx.quadraticCurveTo(-32, 17, -32, -7);
+    ctx.lineTo(-32, -29);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    // checkmark
+    ctx.beginPath();
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.moveTo(-16, -2);
+    ctx.lineTo(-3, 11);
+    ctx.lineTo(20, -16);
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = p.accent;
+    ctx.font = '700 26px "Space Grotesk", sans-serif';
+    ctx.fillText('O V E R L A B', cx, 196);
+
+    ctx.fillStyle = p.text;
+    ctx.font = '700 52px "Playfair Display", "Space Grotesk", serif';
+    ctx.fillText('Attestation de formation', cx, 280);
+
+    ctx.fillStyle = p.dim;
+    ctx.font = '400 18px Inter, sans-serif';
+    ctx.fillText('C Y B E R S É C U R I T É   —   S E N S I B I L I S A T I O N   A U X   M E N A C E S   N U M É R I Q U E S', cx, 312);
+
+    ctx.font = '400 20px Inter, sans-serif';
+    ctx.fillText('Ce document certifie que', cx, 400);
+
+    ctx.fillStyle = p.accent;
+    ctx.font = '700 50px "Playfair Display", Georgia, serif';
+    ctx.fillText(data.name, cx, 460);
+
+    if (data.pseudo){
+      ctx.fillStyle = p.dim;
+      ctx.font = '400 20px "JetBrains Mono", monospace';
+      ctx.fillText(`(${data.pseudo})`, cx, 490);
+    }
+
+    ctx.fillStyle = p.text;
+    ctx.font = '400 20px Inter, sans-serif';
+    ctx.fillText('a suivi avec succès la formation OverLab et obtenu un score de', cx, 545);
+
+    ctx.font = '700 30px "Space Grotesk", sans-serif';
+    ctx.fillText(`${data.score}% au quiz de validation (${data.scoreRaw})`, cx, 585);
+
+    // Signature line (left) + name line (right)
+    const sigLineY = 690;
+    ctx.strokeStyle = p.border;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(140, sigLineY); ctx.lineTo(420, sigLineY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(780, sigLineY); ctx.lineTo(1060, sigLineY); ctx.stroke();
+
+    ctx.fillStyle = p.dim;
+    ctx.font = '400 17px "JetBrains Mono", monospace';
+    ctx.fillText("Signature de l'apprenant", 280, sigLineY + 30);
+
+    ctx.fillText('Abimaël — Formateur', 920, sigLineY + 30);
+    ctx.font = '400 15px "JetBrains Mono", monospace';
+    ctx.fillText('Créateur · Overdev', 920, sigLineY + 52);
+
+    function drawTrainerSignature(cb){
+      const timg = new Image();
+      timg.onload = () => {
+        const maxW = 260, maxH = 70;
+        let dw = maxW, dh = maxW * (timg.height / timg.width);
+        if (dh > maxH){ dh = maxH; dw = maxH * (timg.width / timg.height); }
+        ctx.drawImage(timg, 920 - dw/2, sigLineY - dh - 6, dw, dh);
+        cb();
+      };
+      timg.onerror = cb;
+      timg.src = TRAINER_SIGNATURE;
+    }
+
+    function finishAndDownload(){
+      ctx.fillStyle = p.dim;
+      ctx.font = '400 15px "JetBrains Mono", monospace';
+      ctx.fillText(`${date} — ${time}`, cx, 760);
+      ctx.font = '400 14px "JetBrains Mono", monospace';
+      ctx.fillText(`N° ATTESTATION : ${certNum}`, cx, 795);
+
+      const link = document.createElement('a');
+      const safeName = data.name.replace(/[^a-z0-9]+/gi, '_');
+      link.download = `Attestation_OverLab_${safeName}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function drawLearnerSignatureThenFinish(){
+      if (data.signatureData){
+        const img = new Image();
+        img.onload = () => {
+          const maxW = 260, maxH = 70;
+          let dw = maxW, dh = maxW * (img.height / img.width);
+          if (dh > maxH){ dh = maxH; dw = maxH * (img.width / img.height); }
+          ctx.drawImage(img, 280 - dw/2, sigLineY - dh - 6, dw, dh);
+          drawTrainerSignature(finishAndDownload);
+        };
+        img.onerror = () => drawTrainerSignature(finishAndDownload);
+        img.src = data.signatureData;
+      } else {
+        drawTrainerSignature(finishAndDownload);
+      }
+    }
+
+    drawLearnerSignatureThenFinish();
+  }
+
+  renderCertificateGate();
 });
 
 </script>
